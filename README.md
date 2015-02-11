@@ -1,6 +1,6 @@
 # Small DOM Query
 
-Just want a small library to query DOM for micro projects instead of include the entire jQuery.
+Just want a small library to query DOM for micro projects instead of including the entire jQuery.
 
 Inspired by the following links:
 

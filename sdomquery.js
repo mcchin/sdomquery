@@ -27,11 +27,24 @@
             },
             utils: function() {
                 return {
-                    each: function each(elements, callback) {
-                        var length = elements.length;
-                        if ("undefined" !== length) {
-                            for (var i = 0; i < length; i++) {
-                                callback.call(null, elements[i], i, elements);
+                    each: function each() {
+                        var elements = null,
+                            callback = function() {};
+
+                        if ( arguments.length > 0 ) {
+                            if ( "function" === typeof arguments[0] ) {
+                                callback = arguments[0];
+                                elements = this;
+                            } else if ( arguments.length > 1 && "function" === typeof arguments[1] ) {
+                                elements = arguments[0];
+                                callback = arguments[1];
+                            }
+
+                            var length = elements.length;
+                            if ("undefined" !== length) {
+                                for (var i = 0; i < length; i++) {
+                                    callback.call(null, elements[i], i, elements);
+                                }
                             }
                         }
                         return elements;
