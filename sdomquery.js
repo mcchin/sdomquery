@@ -1,6 +1,6 @@
 ! function(e) {
     var obj;
-    "undefined" !== typeof window ? obj = window : "undefined" !== typeof global ? obj = global : "undefined" !== typeof self && (obj = self), obj.$ = e();
+    "undefined" !== typeof window ? obj = window : "undefined" !== typeof global ? obj = global : "undefined" !== typeof self && (obj = self), obj.sDomQuery = obj.$ = e();
 } (function() {
     return (function loadModule(moduleList, initFunction, api) {		
         $ = moduleList[initFunction].call(api, moduleList, api);
@@ -56,23 +56,6 @@
 
             var runOnce = false;
 
-            function $(domSelector) {
-                var foundObjects = null,
-                    regHtml = /^$/,
-                    regID = /^$/,
-                    regClass = /^$/;
-
-                // if html append
-                // if instance return instance
-                if ( domSelector ) {
-                    foundObjects = document.querySelectorAll(domSelector);
-                }
-
-                return (function() {
-                    return new sDomQuery(foundObjects);
-                })();
-            }
-
             if ( !runOnce ) {
                 sDomQuery.prototype = functionList;
                 runOnce = true;
@@ -88,7 +71,22 @@
                 } 
             }
 
-            return $;
+            return function(domSelector) {
+                var foundObjects = null,
+                    regHtml = /^$/,
+                    regID = /^$/,
+                    regClass = /^$/;
+
+                // if html append
+                // if instance return instance
+                if ( domSelector ) {
+                    foundObjects = document.querySelectorAll(domSelector);
+                }
+
+                return (function() {
+                    return new sDomQuery(foundObjects);
+                })();
+            };
         },
         init: function(moduleList, api) {
             var functionList = {},
