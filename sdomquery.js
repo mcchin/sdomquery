@@ -3,8 +3,8 @@
     "undefined" !== typeof window ? obj = window : "undefined" !== typeof global ? obj = global : "undefined" !== typeof self && (obj = self), obj.$ = e();
 } (function() {
     return (function loadModule(moduleList, initFunction, api) {		
-      $ = moduleList[initFunction].call(api, moduleList, api);
-      return $;
+        $ = moduleList[initFunction].call(api, moduleList, api);
+        return $;
     })({
         modules: {
             css: function() {
@@ -28,13 +28,13 @@
             utils: function() {
                 return {
                     each: function each(elements, callback) {
-                var length = elements.length;
-                if ("undefined" !== length) {
-                  for (var i = 0; i < length; i++) {
-                      callback.call(null, elements[i], i, elements);
-                  }
-                }
-                return elements;
+                        var length = elements.length;
+                        if ("undefined" !== length) {
+                            for (var i = 0; i < length; i++) {
+                                callback.call(null, elements[i], i, elements);
+                            }
+                        }
+                        return elements;
                     }
                 }
             }
@@ -45,9 +45,9 @@
 
             function $(domSelector) {
                 var foundObjects = null,
-                      regHtml = /^$/,
-                      regID = /^$/,
-                      regClass = /^$/;
+                    regHtml = /^$/,
+                    regID = /^$/,
+                    regClass = /^$/;
 
                 // if html append
                 // if instance return instance
@@ -66,7 +66,6 @@
             }
 
             function sDomQuery(foundObjects) {
-
                 this.length = foundObjects ? foundObjects.length : 0;
 
                 if ( foundObjects ) {
@@ -80,8 +79,8 @@
         },
         init: function(moduleList, api) {
             var functionList = {},
-                  importList = null,
-                  $ = null;
+                importList = null,
+                $ = null;
 
             for ( var _key in moduleList['modules']) {
                 importList = moduleList['modules'][_key]();
