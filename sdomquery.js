@@ -4,7 +4,6 @@
 } (function() {
 
     var domEventListener = "undefined" !== typeof document.addEventListener ? document.addEventListener : "undefined" !== typeof document.attachEvent ? document.attachEvent : null;
-
     return (function loadModule(moduleList, initFunction) {
         return moduleList[initFunction].call(this, moduleList);
     })({
@@ -108,11 +107,16 @@
                     has: function() {
                         return this;
                     },
-                    children: function() {
+                    children: function(domSelector) {
                         return this;	
                     },
-                    parent: function() {
-                        return this;
+                    parent: function(domSelector) {
+
+                        if ( "undefined" !== this[0].parentNode ) {
+                            console.log(JSON.stringify(this[0].parentNode));
+                            return new sDomQuery(this[0].parentNode)
+                        }
+                        return false
                     },
                     first: function() {
                         return this;
@@ -134,6 +138,12 @@
                         return this;
                     },
                     empty: function() {
+                        var i = 0;
+
+                        for ( ; i < this.length ; i++ ) {
+                            this[i].innerHTML = '';
+                        }
+
                         return this;
                     },
                     attr: function() {
@@ -233,13 +243,16 @@
                 append: function () {
 
                 },
+                prepend: function() {
+
+                },
                 isNumeric: function() {
 
                 },
-                isFunction: function() {
-
+                isFunction: function(obj) {
+                    return "function" === typeof obj
                 },
-                isArray: function( obj ) {
+                isArray: function(obj) {
                     return Array.isArray(obj)
                 },
                 isPlainObject: function() {
@@ -299,7 +312,7 @@
                 importList = null,
                 $ = null;
 
-            // Get all the functions defined - Tools
+            // Get all the functions defined - Tools - Internal/private functions 
             importList = moduleList['tools']();
             for ( var _func in importList ) {
                 if ( "undefined" === typeof tools[_func] ) {
@@ -307,7 +320,7 @@
                 }
             }
 
-            // Get all the functions defined - Modules
+            // Get all the functions defined - Modules 
             for ( var _key in moduleList['modules']) {
                 importList = moduleList['modules'][_key](tools);
                 for ( var _func in importList ) {
@@ -317,7 +330,7 @@
                 }
             }
 
-            // Get all the functions defined - Utils
+            // Get all the functions defined - Utils - This is to expose util for $
             importList = moduleList['utils'](tools);
             for ( var _func in importList ) {
                 if ( "undefined" === typeof utilityList[_func] ) {
