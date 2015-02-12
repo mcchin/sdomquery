@@ -2,34 +2,89 @@
     var obj;
     "undefined" !== typeof window ? obj = window : "undefined" !== typeof global ? obj = global : "undefined" !== typeof self && (obj = self), obj.sDomQuery = obj.$ = sDomQuery();
 } (function() {
+
+    var domEventListener = "undefined" !== typeof document.addEventListener ? document.addEventListener : "undefined" !== typeof document.attachEvent ? document.attachEvent : null;
+
     return (function loadModule(moduleList, initFunction) {
         return moduleList[initFunction].call(this, moduleList);
     })({
         modules: {
-            css: function() {
+            css: function(tools) {
                 return {
-                    addClass: function() {
-                        // testing
-                        console.log('act1');
-                        console.log(this);
-                        this['each'](this, function(ele, idx) {
-                            console.log(ele.style);
-                            console.log(idx);
-                        });						
+                    addClass: function(className) {
+                        var i = 0;
+
+                        if ( tools.stringNotBlank(className) ) {
+                            for ( ; i < this.length ; i++ ) {
+                                if ( !tools.matchString(this[i].className, className) ) {
+                                    this[i].className += " " + className;
+                                }
+                            }
+                        }				
+
                         return this;
                     },
-                    removeClass: function() {
+                    removeClass: function(className) {
+                        var i = 0;
+
+                        if ( tools.stringNotBlank(className) ) {
+                            for ( ; i < this.length ; i++ ) {
+                                if ( this[i].className ) {
+                                    this[i].className = this[i].className
+                                                               .replace(
+                                                                    new RegExp('(\\s|^)'+className+'(\\s|$)')
+                                                                );
+                                }
+                            }
+                        }
+
                         return this;
                     },
-                    hasClass: function() {
-                        return this;
+                    hasClass: function(className) {
+                        var i = 0;
+
+                        if ( tools.stringNotBlank(className) ) {
+                            for ( ; i < this.length ; i++ ) {
+                                if ( this[i].className 
+                                     && tools.matchString(this[i].className, className) ) {
+                                    return true;
+                                }
+                            }
+                        }
+
+                        return false;
                     },
                     css: function() {
+                        var styles = {},
+                            output = {},
+                            i = 0;
+
+                        if ( 1 === arguments.length && "string" === typeof arguments[0] ) {
+                            return this[0].style[tools.camelCase(arguments[0])];
+                        } else if ( 1 === arguments.length && this.isArray(arguments[0]) ) {
+                            for ( ; i < arguments[0].length ; i++ ) {
+                                output[arguments[0][i]] = this[0].style[tools.camelCase(arguments[0][i])];
+                            }
+                            return output;
+                        } else if ( 1 === arguments.length && "object" === typeof arguments[0] ) {
+                            for ( var prop in arguments[0] ) {
+                                styles[tools.camelCase(prop)] = arguments[0][prop];
+                            }
+                        } else if ( 2 === arguments.length ) {
+                            styles[tools.camelCase(arguments[0])] = arguments[1];
+                        }
+
+                        for ( var prop in styles ) {
+                            for ( i = 0 ; i < this.length ; i++ ) {
+                                this[i].style[prop] = styles[prop];
+                            }
+                        }
+
                         return this;
                     }
                 };
             },
-            position: function() {
+            position: function(tools) {
                 return {
                     height: function() {
                         return this;
@@ -45,7 +100,7 @@
                     }
                 }
             },
-            traverse: function() {
+            traverse: function(tools) {
                 return {
                     find: function() {
                         return this;
@@ -73,15 +128,28 @@
                     }					
                 }
             },
-            events: function() {
+            manipulation: function(tools) {
                 return {
+                    remove: function() {
+                        return this;
+                    },
+                    empty: function() {
+                        return this;
+                    },
+                    attr: function() {
+                        return this;
+                    }
+                }
+            },
+            events: function(tools) {
+                return {
+                    ready: function( callback ) {
+                        //callback.apply(this, arguments);
+                    },
                     click: function() {
                         return this;
                     },
                     dblclick: function() {
-                        return this;
-                    },
-                    on: function() {
                         return this;
                     },
                     mouseover: function() {
@@ -105,7 +173,25 @@
                 }
             }
         },
-        utils: function() {
+        tools: function() {
+            // Internal functions 
+            return {
+                matchString: function( haystack, needle ) {
+                    return null !== haystack.match(new RegExp('(\\s|^)'+needle+'(\\s|$)'))
+                },
+                stringNotBlank : function( str ) {
+                    return str && "" !== str.trim() 
+                },
+                camelCase: function( str ) {
+                    return str.replace( /^-/, "" ) // Remove first hyphen
+                              .replace( /-([\da-z])/gi, function(all, letter) { 
+                                return "" !== letter ? letter.toUpperCase() : "" 
+                              })
+                }
+            }
+        },
+        utils: function(tools) {
+            // General utility functions
             return {
                 each: function each() {
                     var elements = null,
@@ -123,11 +209,11 @@
                         var length = elements.length;
                         if ("undefined" !== length) {
                             for (var i = 0; i < length; i++) {
-                                callback.call(null, elements[i], i, elements);
+                                callback.call(elements[i], elements[i], i, elements);
                             }
                         }
                     }
-                    return elements;
+                    return elements
                 },
                 extend: function (mergeTarget) {
                   var otherObjects = [];
@@ -141,31 +227,54 @@
                       mergeTarget[objProp] = otherObjects[_key][objProp];
                     }
                   };
-                  return mergeTarget;
+
+                  return mergeTarget
+                },
+                append: function () {
+
+                },
+                isNumeric: function() {
+
+                },
+                isFunction: function() {
+
+                },
+                isArray: function( obj ) {
+                    return Array.isArray(obj)
+                },
+                isPlainObject: function() {
+
                 }
             }
         },  
-        selector: function(functionList, utilityList) {
+        selector: function(functionList, utilityList, tools) {
             var runOnce = false;
 
             if ( !runOnce ) {
+                // Attach utils and other functions to the core
                 utilityList.extend(wrapper, utilityList);
                 utilityList.extend(sDomQuery.prototype, functionList, utilityList);
                 runOnce = true;
             }
 
             function sDomQuery(domSelector) {
-                var foundObjects = null,
-                    regHtml = /^$/,
-                    regID = /^$/,
-                    regClass = /^$/;
+                var foundObjects = [],
+                    regExpHtml = /^$/,
+                    regExpID = /^$/,
+                    regExpClass = /^$/;
 
-                // if html append
+                // Depending on regExp
+                // if html append and pass back
                 // if instance return instance
-                if ( domSelector ) {
+                if ( "string" === typeof domSelector ) {
                     foundObjects = document.querySelectorAll(domSelector);
+                } else if ( "object" === typeof domSelector ) {
+                    foundObjects.push(domSelector);
+                } else {
+                    return this;
                 }
 
+                // Attach objects found 
                 this.length = foundObjects ? foundObjects.length : 0;
 
                 if ( foundObjects ) {
@@ -174,23 +283,33 @@
                     } 
                 } 
 
-                return this;
+                return this
             }      
             
             function wrapper(domSelector) {
-                return new sDomQuery(domSelector);
+                return new sDomQuery(domSelector)
             }          
 
-            return wrapper;
+            return wrapper
         },
         init: function(moduleList) {
             var functionList = {},
                 utilityList = {},
+                tools = {},
                 importList = null,
                 $ = null;
 
+            // Get all the functions defined - Tools
+            importList = moduleList['tools']();
+            for ( var _func in importList ) {
+                if ( "undefined" === typeof tools[_func] ) {
+                    tools[_func] = importList[_func];
+                }
+            }
+
+            // Get all the functions defined - Modules
             for ( var _key in moduleList['modules']) {
-                importList = moduleList['modules'][_key]();
+                importList = moduleList['modules'][_key](tools);
                 for ( var _func in importList ) {
                     if ( "undefined" === typeof functionList[_func] ) {
                         functionList[_func] = importList[_func];
@@ -198,16 +317,17 @@
                 }
             }
 
-            importList = moduleList['utils']();
+            // Get all the functions defined - Utils
+            importList = moduleList['utils'](tools);
             for ( var _func in importList ) {
                 if ( "undefined" === typeof utilityList[_func] ) {
                     utilityList[_func] = importList[_func];
                 }
             }
 
-            $ = moduleList['selector'].call(this, functionList, utilityList);
+            $ = moduleList['selector'].call(this, functionList, utilityList, tools);
 
-            return $;
+            return $
         }
-    }, 'init');
+    }, 'init'); 
 });
