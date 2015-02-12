@@ -8,7 +8,7 @@
         modules: {
             css: function() {
                 return {
-                    act1: function() {
+                    addClass: function() {
                         // testing
                         console.log('act1');
                         console.log(this);
@@ -18,12 +18,91 @@
                         });						
                         return this;
                     },
-                    act2: function(domObject) {
-                        // testing
-                        console.log('act2');
+                    removeClass: function() {
+                        return this;
+                    },
+                    hasClass: function() {
+                        return this;
+                    },
+                    css: function() {
                         return this;
                     }
                 };
+            },
+            position: function() {
+                return {
+                    height: function() {
+                        return this;
+                    },
+                    width: function() {
+                        return this;
+                    },
+                    offset: function() {
+                        return this;
+                    },
+                    position: function() {
+                        return this;
+                    }
+                }
+            },
+            traverse: function() {
+                return {
+                    find: function() {
+                        return this;
+                    },
+                    has: function() {
+                        return this;
+                    },
+                    children: function() {
+                        return this;	
+                    },
+                    parent: function() {
+                        return this;
+                    },
+                    first: function() {
+                        return this;
+                    },
+                    last: function() {
+                        return this;
+                    },
+                    next: function() {
+                        return this;
+                    },
+                    prev: function() {
+                        return this;
+                    }					
+                }
+            },
+            events: function() {
+                return {
+                    click: function() {
+                        return this;
+                    },
+                    dblclick: function() {
+                        return this;
+                    },
+                    on: function() {
+                        return this;
+                    },
+                    mouseover: function() {
+                        return this;
+                    },
+                    hover: function() {
+                        return this;
+                    },
+                    mouseup: function() {
+                        return this;
+                    },	
+                    mousedown: function() {
+                        return this;
+                    },
+                    mouseleave: function() {
+                        return this;
+                    },
+                    mouseenter: function() {
+                        return this;
+                    }
+                }
             }
         },
         utils: function() {
@@ -70,10 +149,8 @@
             var runOnce = false;
 
             if ( !runOnce ) {
-                //utilityList.extend(functionList, utilityList);
-                sDomQuery.prototype = utilityList;
-                utilityList.extend(sDomQuery.prototype, functionList);
                 utilityList.extend(wrapper, utilityList);
+                utilityList.extend(sDomQuery.prototype, functionList, utilityList);
                 runOnce = true;
             }
 
@@ -99,7 +176,7 @@
 
                 return this;
             }      
-
+            
             function wrapper(domSelector) {
                 return new sDomQuery(domSelector);
             }          
