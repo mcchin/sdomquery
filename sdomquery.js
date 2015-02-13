@@ -100,26 +100,67 @@
             },
             traverse: function(tools) {
                 return {
-                    find: function() {
-                        return this
+                    find: function(domSelector) {
+                        var output = [],
+                            i = 0,
+                            j = 0,
+                            child = null;
+
+                        if ( tools.stringNotBlank(domSelector) ) {
+                            for ( ; i < this.length ; i++ ) {
+                                if ( "undefined" !== this[i].childNodes ) {
+                                    child = this[i].querySelectorAll(domSelector);
+                                    if ( child ) {
+                                        for(var j = 0 ; j < child.length ; j++ ) {
+                                            output.push(child[j]);
+                                        } 
+                                    }	
+                                }
+                            }
+                        }
+
+                        return tools.wrapper(output);
                     },
                     has: function(domSelector) {
                         var output = [],
                             i = 0,
                             child = null;
 
+                        if ( tools.stringNotBlank(domSelector) ) {
+                            for ( ; i < this.length ; i++ ) {
+                                if ( "undefined" !== this[i].childNodes ) {
+                                    child = this[i].querySelectorAll(domSelector);
+                                    if ( child.length ) {
+                                        output.push(this[i]);
+                                    }
+                                }
+                            }
+                            return tools.wrapper(output);
+                        }
+
+                        return 
+                    },
+                    children: function(domSelector) {
+                        var output = [],
+                            i = 0,
+                            j = 0,
+                            child = null;
+
                         for ( ; i < this.length ; i++ ) {
                             if ( "undefined" !== this[i].childNodes ) {
-                                if ( domSelector ) {
+                                if ( tools.stringNotBlank(domSelector) ) {
                                     child = this[i].querySelectorAll(domSelector);
-                                    if ( child ) {
-                                        for(var i = 0 ; i < child.length ; i++ ) {
-                                            output[i] = child[i];
+                                    if ( child.length ) {
+                                        for(var j = 0 ; j < child.length ; j++ ) {
+                                            // Only direct child
+                                            if ( child[j].parentNode === this[i] ) {
+                                                output.push(child[j]);
+                                            }
                                         } 
                                     } 									
-                                } else {
+                                } else {							
                                     for ( child in this[i].childNodes ) {
-                                        if ( "DIV" === this[i].childNodes[child].nodeName ) {
+                                        if ( 1 === this[i].childNodes[child].nodeType ) {
                                             output.push(this[i].childNodes[child]);
                                         }
                                     }
@@ -129,32 +170,32 @@
 
                         return tools.wrapper(output);
                     },
-                    children: function(domSelector) {
-                        var output = [],
-                            i = 0,
-                            child = null;
-
-                        for ( ; i < this.length ; i++ ) {
-                            if ( "undefined" !== this[i].childNodes ) {
-                                for ( child in this[i].childNodes ) {
-                                    if ( "DIV" === this[i].childNodes[child].nodeName ) {
-                                        output.push(this[i].childNodes[child]);
-                                    }
-                                }
-                            }
-                        }
-
-                        return tools.wrapper(output);
-                    },
                     parent: function(domSelector) {
                         var output = [],
-                            i = 0;
+                            parent = null,
+                            child = null,
+                            i = 0,
+                            j = 0;
 
                         for ( ; i < this.length ; i++ ) {
-                            if ( "undefined" !== this[i].parentNode ) {
-                                if ( "DIV" === this[i].parentNode.nodeName ) {
-                                    tools.pushUniq(output, this[i].parentNode)
-                                }
+                            // Need more efficient logic here
+                            if ( tools.stringNotBlank(domSelector) ) {
+                                parent = this[i].parentNode;
+                                if ( "undefined" !== parent.parentNode
+                                     && 1 === parent.parentNode.nodeType ) {
+                                    child = parent.parentNode.querySelectorAll(domSelector);
+                                    if ( child.length ) {
+                                        for(var j = 0 ; j < child.length ; j++ ) {
+                                            if ( child[j].parentNode === parent.parentNode ) {
+                                                if (child[j] === parent ) {
+                                                    tools.pushUniq(output, child[j]);
+                                                }
+                                            }
+                                        } 
+                                    }										
+                                }						
+                            } else {									
+                                tools.pushUniq(output, this[i].parentNode)
                             }
                         }
 
@@ -172,7 +213,7 @@
                         }						
                         return 
                     },
-                    next: function() {
+                    next: function(domSelector) {
                         var output = [],
                             nextSibling = null,
                             i = 0;
@@ -181,8 +222,11 @@
                             nextSibling = this[i].nextSibling;
 
                             while ( null !== nextSibling ) {
-                                if ( "DIV" === nextSibling.nodeName ) {
-                                    tools.pushUniq(output, nextSibling)
+                                if ( 1 === nextSibling.nodeType ) {
+                                    if ( !domSelector 
+                                         || (tools.stringNotBlank(domSelector) && tools.matchesSelector(nextSibling, domSelector)) ) {
+                                        tools.pushUniq(output, nextSibling)
+                                    }
                                 }
                                 nextSibling = nextSibling.nextSibling;
                             }
@@ -190,7 +234,7 @@
 
                         return tools.wrapper(output);
                     },
-                    prev: function() {
+                    prev: function(domSelector) {
                         var output = [],
                             prevSibling = null,
                             i = 0;
@@ -199,8 +243,11 @@
                             prevSibling = this[i].previousSibling;
 
                             while ( null !== prevSibling ) {
-                                if ( "DIV" === prevSibling.nodeName ) {
-                                    tools.pushUniq(output, prevSibling)
+                                if ( 1 === prevSibling.nodeType ) {
+                                    if ( !domSelector 
+                                         || (tools.stringNotBlank(domSelector) && tools.matchesSelector(prevSibling, domSelector)) ) {									
+                                        tools.pushUniq(output, prevSibling)
+                                    }
                                 }
                                 prevSibling = prevSibling.previousSibling;
                             }
@@ -295,6 +342,27 @@
                 },
                 wrapper: function( newObjects ) {
                     return new sDomQuery(newObjects)
+                },
+                matchesSelector: function( ele, domSelector ) {
+                    if ("function" === typeof ele.oMatchesSelector) 
+                        return ele.oMatchesSelector(domSelector)  
+                    else if ("function" === typeof ele.msMatchesSelector)
+                        return ele.msMatchesSelector(domSelector)
+                    else if ("function" === typeof ele.webkitMatchesSelector)
+                        return ele.webkitMatchesSelector(domSelector) 
+                    else if ("function" === typeof ele.mozMatchesSelector)
+                        return ele.mozMatchesSelector(domSelector) 
+                    else {
+                        var matches = (ele.document || ele.ownerDocument).querySelectorAll(domSelector);
+                        var i = 0;
+
+                        while (matches[i] && matches[i] !== ele) {
+                            i++;
+                        }
+
+                        return matches[i] ? true : false;
+                    }
+                    return false
                 }
             }
         },
