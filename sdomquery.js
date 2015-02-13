@@ -2,7 +2,6 @@
     var obj;
     "undefined" !== typeof window ? obj = window : "undefined" !== typeof global ? obj = global : "undefined" !== typeof self && (obj = self), obj.sDomQuery = obj.$ = sDomQuery();
 } (function() {
-
     var domEventListener = "undefined" !== typeof document.addEventListener ? document.addEventListener : "undefined" !== typeof document.attachEvent ? document.attachEvent : null;
     return (function loadModule(moduleList, initFunction) {
         return moduleList[initFunction].call(this, moduleList);
@@ -102,34 +101,119 @@
             traverse: function(tools) {
                 return {
                     find: function() {
-                        return this;
+                        return this
                     },
-                    has: function() {
-                        return this;
+                    has: function(domSelector) {
+                        var output = [],
+                            i = 0,
+                            child = null;
+
+                        for ( ; i < this.length ; i++ ) {
+                            if ( "undefined" !== this[i].childNodes ) {
+                                if ( domSelector ) {
+                                    child = this[i].querySelectorAll(domSelector);
+                                    if ( child ) {
+                                        for(var i = 0 ; i < child.length ; i++ ) {
+                                            output[i] = child[i];
+                                        } 
+                                    } 									
+                                } else {
+                                    for ( child in this[i].childNodes ) {
+                                        if ( "DIV" === this[i].childNodes[child].nodeName ) {
+                                            output.push(this[i].childNodes[child]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        return tools.wrapper(output);
                     },
                     children: function(domSelector) {
-                        return this;	
+                        var output = [],
+                            i = 0,
+                            child = null;
+
+                        for ( ; i < this.length ; i++ ) {
+                            if ( "undefined" !== this[i].childNodes ) {
+                                for ( child in this[i].childNodes ) {
+                                    if ( "DIV" === this[i].childNodes[child].nodeName ) {
+                                        output.push(this[i].childNodes[child]);
+                                    }
+                                }
+                            }
+                        }
+
+                        return tools.wrapper(output);
                     },
                     parent: function(domSelector) {
+                        var output = [],
+                            i = 0;
 
-                        if ( "undefined" !== this[0].parentNode ) {
-                            console.log(JSON.stringify(this[0].parentNode));
-                            return new sDomQuery(this[0].parentNode)
+                        for ( ; i < this.length ; i++ ) {
+                            if ( "undefined" !== this[i].parentNode ) {
+                                if ( "DIV" === this[i].parentNode.nodeName ) {
+                                    tools.pushUniq(output, this[i].parentNode)
+                                }
+                            }
                         }
-                        return false
+
+                        return tools.wrapper(output);
                     },
                     first: function() {
-                        return this;
+                        if ( this.length ) {
+                            return tools.wrapper([this[0]])
+                        }
+                        return 
                     },
                     last: function() {
-                        return this;
+                        if ( this.length ) {
+                            return tools.wrapper([this[this.length - 1]])
+                        }						
+                        return 
                     },
                     next: function() {
-                        return this;
+                        var output = [],
+                            nextSibling = null,
+                            i = 0;
+
+                        for( ; i < this.length ; i++ ) {
+                            nextSibling = this[i].nextSibling;
+
+                            while ( null !== nextSibling ) {
+                                if ( "DIV" === nextSibling.nodeName ) {
+                                    tools.pushUniq(output, nextSibling)
+                                }
+                                nextSibling = nextSibling.nextSibling;
+                            }
+                        }
+
+                        return tools.wrapper(output);
                     },
                     prev: function() {
-                        return this;
-                    }					
+                        var output = [],
+                            prevSibling = null,
+                            i = 0;
+
+                        for( ; i < this.length ; i++ ) {
+                            prevSibling = this[i].previousSibling;
+
+                            while ( null !== prevSibling ) {
+                                if ( "DIV" === prevSibling.nodeName ) {
+                                    tools.pushUniq(output, prevSibling)
+                                }
+                                prevSibling = prevSibling.previousSibling;
+                            }
+                        }
+
+                        return tools.wrapper(output);
+                    },
+                    get: function(idx) {
+                        if ( this.length && "undefined" !== this[idx] ) {
+                            return tools.wrapper([this[idx]])
+                        }
+                        return 
+                    }				
                 }
             },
             manipulation: function(tools) {
@@ -197,6 +281,20 @@
                               .replace( /-([\da-z])/gi, function(all, letter) { 
                                 return "" !== letter ? letter.toUpperCase() : "" 
                               })
+                },
+                pushUniq: function( list, item ) {
+                    var i = 0;
+
+                    for ( ; i < list.length ; i++ ) {
+                        if ( list[i] === item ) { 
+                            return; 
+                        }
+                    }
+
+                    list.push(item);
+                },
+                wrapper: function( newObjects ) {
+                    return new sDomQuery(newObjects)
                 }
             }
         },
@@ -281,6 +379,8 @@
                 // if instance return instance
                 if ( "string" === typeof domSelector ) {
                     foundObjects = document.querySelectorAll(domSelector);
+                } else if ( utilityList.isArray(domSelector) ) {
+                    foundObjects = domSelector;
                 } else if ( "object" === typeof domSelector ) {
                     foundObjects.push(domSelector);
                 } else {
