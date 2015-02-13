@@ -1,9 +1,9 @@
-   _____ _                 __        ____  ____  __  ___   ____                       
+`   _____ _                 __        ____  ____  __  ___   ____                       
   / ___/(_)___ ___  ____  / /__     / __ \/ __ \/  |/  /  / __ \__  _____  _______  __
   \__ \/ / __ `__ \/ __ \/ / _ \   / / / / / / / /|_/ /  / / / / / / / _ \/ ___/ / / /
  ___/ / / / / / / / /_/ / /  __/  / /_/ / /_/ / /  / /  / /_/ / /_/ /  __/ /  / /_/ / 
 /____/_/_/ /_/ /_/ .___/_/\___/  /_____/\____/_/  /_/   \___\_\__,_/\___/_/   \__, /  
-                /_/                                                          /____/   
+                /_/                                                          /____/   `
 
 Just want a small enough library to query DOM for micro projects instead of including the entire jQuery.
 
@@ -25,4 +25,4 @@ Inspired by the following links:
 
 Copyright 2015 web1977.com 
 
-Licensed under the `MIT License`_
+Licensed under the [MIT License](http://opensource.org/licenses/MIT)
