@@ -86,11 +86,33 @@
                 return {
                     height: function() {
 
-                        return this;
+                        return
                     },
                     width: function() {
 
-                        return this;
+                        return
+                    },
+                    innerHeight: function() {
+                        if ( this.length > 0 ) {
+                            return this[0].scrollHeight
+                        }
+
+                        return
+                    },
+                    innerWidth: function() {
+                        if ( this.length > 0 ) {
+                            return this[0].scrollWidth
+                        }
+
+                        return
+                    },
+                    outerHeight: function() {
+
+                        return
+                    },
+                    outerWidth: function() {
+
+                        return
                     },
                     offset: function() {
 
