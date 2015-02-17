@@ -79,16 +79,37 @@
                         }
 
                         return this;
+                    },
+                    styles: function() {
+                        if ( this.length > 0 ) {
+                            return tools.getStyles(this[0])
+                        }
+
+                        return
                     }
                 };
             },
             position: function(tools) {
                 return {
                     height: function() {
+                        var styles = null;
+
+                        if ( this.length > 0 ) {
+                            styles = tools.getStyles(this[0]);
+
+                            return parseFloat(styles.height)
+                        }
 
                         return
                     },
                     width: function() {
+                        var styles = null;
+
+                        if ( this.length > 0 ) {
+                            styles = tools.getStyles(this[0]);
+
+                            return parseFloat(styles.width)
+                        }
 
                         return
                     },
@@ -107,10 +128,32 @@
                         return
                     },
                     outerHeight: function() {
+                        var styles = null;
+
+                        if ( this.length > 0 ) {
+                            styles = tools.getStyles(this[0]);
+
+                            return parseFloat(styles.height) 
+                                   + parseFloat(styles.paddingTop) 
+                                   + parseFloat(styles.paddingBottom) 
+                                   + parseFloat(styles.borderTopWidth) 
+                                   + parseFloat(styles.borderBottomWidth) 
+                        }
 
                         return
                     },
                     outerWidth: function() {
+                        var styles = null;
+
+                        if ( this.length > 0 ) {
+                            styles = tools.getStyles(this[0]);
+
+                            return parseFloat(styles.width) 
+                                   + parseFloat(styles.paddingLeft) 
+                                   + parseFloat(styles.paddingRight) 
+                                   + parseFloat(styles.borderLeftWidth) 
+                                   + parseFloat(styles.borderRightWidth) 
+                        }
 
                         return
                     },
@@ -414,6 +457,13 @@
                 },
                 wrapper: function( newObjects ) {
                     return new sDomQuery(newObjects)
+                },
+                getStyles: function( obj ) {
+                    if ( "undefined" !== window.getComputedStyle ) {
+                        return window.getComputedStyle(obj)
+                    } else if ( "undefined" !== obj.currentStyle ) {
+                        return obj.currentStyle
+                    }
                 },
                 matchesSelector: function( ele, domSelector ) {
                     if ("function" === typeof ele.oMatchesSelector) 
