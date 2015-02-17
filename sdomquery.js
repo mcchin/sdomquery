@@ -85,15 +85,19 @@
             position: function(tools) {
                 return {
                     height: function() {
+
                         return this;
                     },
                     width: function() {
+
                         return this;
                     },
                     offset: function() {
+
                         return this;
                     },
                     position: function() {
+
                         return this;
                     }
                 }
@@ -265,19 +269,65 @@
             },
             manipulation: function(tools) {
                 return {
-                    remove: function() {
-                        return this;
-                    },
-                    empty: function() {
+                    remove: function(domSelector) {
                         var i = 0;
 
                         for ( ; i < this.length ; i++ ) {
-                            this[i].innerHTML = '';
+                            if ( !domSelector 
+                                 || (tools.stringNotBlank(domSelector) && tools.matchesSelector(this[i], domSelector)) ) {
+                                this[i].parentNode.removeChild(this[i])
+                            }							
+                            
+                        }
+
+                        return this;
+                    },
+                    empty: function(domSelector) {
+                        var i = 0;
+
+                        for ( ; i < this.length ; i++ ) {
+                            if ( !domSelector 
+                                 || (tools.stringNotBlank(domSelector) && tools.matchesSelector(this[i], domSelector)) ) {
+                                this[i].innerHTML = ''
+                            }							
+                            
                         }
 
                         return this;
                     },
                     attr: function() {
+                        var attrs = {},
+                            attr = '',
+                            output = {},
+                            i = 0;
+
+                        if ( 1 === arguments.length && "string" === typeof arguments[0] ) {
+                            return this[0].getAttribute(arguments[0])
+                        } else if ( 1 === arguments.length && this.isArray(arguments[0]) ) {
+                            for ( ; i < arguments[0].length ; i++ ) {
+                                output[arguments[0][i]] = this[0].getAttribute(arguments[0][i]);
+                            }
+                            return output;
+                        } else if ( 1 === arguments.length && "object" === typeof arguments[0] ) {
+                            for ( var prop in arguments[0] ) {
+                                attrs[prop] = arguments[0][prop];
+                            }
+                        } else if ( 2 === arguments.length ) {
+                            attrs[arguments[0]] = arguments[1];
+                        } else {
+                            // Return all attributes
+                            for ( ; i < this[0].attributes.length ; i++ ) {
+                                output[this[0].attributes[i].nodeName] = this[0].attributes[i].value;
+                            }							
+                            return output;
+                        }
+
+                        for ( var prop in attrs ) {
+                            for ( i = 0 ; i < this.length ; i++ ) {
+                                this[i].setAttribute(prop, attrs[prop]);
+                            }
+                        }
+
                         return this;
                     }
                 }
@@ -412,8 +462,8 @@
                 prepend: function() {
 
                 },
-                isNumeric: function() {
-
+                isNumeric: function(obj) {
+                    return 0 === (obj - parseFloat(obj))
                 },
                 isFunction: function(obj) {
                     return "function" === typeof obj
@@ -421,8 +471,8 @@
                 isArray: function(obj) {
                     return Array.isArray(obj)
                 },
-                isPlainObject: function() {
-
+                isPlainObject: function(obj) {
+                    return "object" === typeof obj && "Object" === obj.constructor.name
                 }
             }
         },  
