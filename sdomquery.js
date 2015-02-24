@@ -2,7 +2,9 @@
     var obj;
     "undefined" !== typeof window ? obj = window : "undefined" !== typeof global ? obj = global : "undefined" !== typeof self && (obj = self), obj.sDomQuery = obj.$ = sDomQuery();
 } (function() {
-    var isReady = false,
+    var //domEventListener = "undefined" !== typeof document.addEventListener ? document.addEventListener : "undefined" !== typeof document.attachEvent ? document.attachEvent : null,
+        //removeDomEventListener = "undefined" !== typeof document.removeEventListener ? document.removeEventListener : "undefined" !== typeof document.detachEvent ? document.detachEvent : null,
+        isReady = false,
         readyCallback = null;
 
     return (function loadModule(moduleList, initFunction) {
@@ -506,7 +508,7 @@
             },
             events: function(tools) {
                 return {
-                    ready: function( callback ) {
+                    ready: function(callback) {
                         if ( sDomQuery.isFunction(callback) ) {
                             readyCallback = callback;
                             if ( isReady ) {
@@ -515,11 +517,30 @@
                                 setTimeout(sDomQuery.ready, 1)
                             }
                         }
-                    },
-                    click: function() {
+                    }.bind(this),
+                    click: function(callback) {
+                        var output = [],
+                            i = 0;
+
+                        if ( this.length > 0 
+                             && this.isFunction(callback) ) {
+                            for ( ; i < this.length ; i++ ) {
+
+                                if ( this[i].addEventListener ) {
+                                    this[i].addEventListener("click", callback.bind(this[i]), false);
+                                } else if ( this[i].attachEvent ) {
+                                    this[i].attachEvent("click", callback.bind(this[i]));
+                                }								
+                                output.push(this[i])
+                            }
+
+                            return output
+                        }
+
                         return
                     },
                     dblclick: function() {
+
                         return
                     },
                     mouseover: function() {
@@ -539,6 +560,9 @@
                     },
                     mouseenter: function() {
                         return
+                    },
+                    unbind: function() {
+
                     }
                 }
             }
@@ -760,9 +784,9 @@
             $ = moduleList['selector'].call(this, functionList, utilityList, tools);
 
             DOMReady = function() {
-                if ( document.addEventListener ) {
+                if ( "undefined" !== typeof document.removeEventListener ) {
                     document.removeEventListener("DOMContentLoaded", DOMReady, false);
-                } else if ( document.attachEvent ) {
+                } else if ( "undefined" !== typeof document.detachEvent ) {
                     document.detachEvent("onreadystatechange", DOMReady);
                 }
 
