@@ -518,19 +518,24 @@
                             }
                         }
                     }.bind(this),
-                    click: function(callback) {
+                    click: function() {
                         var output = [],
+                            callback = null,
+                            args = null,
                             i = 0;
 
+                        if ( 2 === arguments.length ) {
+                            args = arguments[0];
+                            callback = arguments[1];
+                        } else if ( 1 === arguments.length ) {
+                            callback = arguments[0];
+                        }
+
                         if ( this.length > 0 
+                             && arguments.length > 0
                              && this.isFunction(callback) ) {
                             for ( ; i < this.length ; i++ ) {
-
-                                if ( this[i].addEventListener ) {
-                                    this[i].addEventListener("click", callback.bind(this[i]), false);
-                                } else if ( this[i].attachEvent ) {
-                                    this[i].attachEvent("click", callback.bind(this[i]));
-                                }								
+                                tools.bindEvent(this[i], 'click', callback, args, false);
                                 output.push(this[i])
                             }
 
@@ -540,6 +545,28 @@
                         return
                     },
                     dblclick: function() {
+                        var output = [],
+                            callback = null,
+                            args = null,						
+                            i = 0;
+
+                        if ( 2 === arguments.length ) {
+                            args = arguments[0];
+                            callback = arguments[1];
+                        } else if ( 1 === arguments.length ) {
+                            callback = arguments[0];
+                        }
+
+                        if ( this.length > 0 
+                             && arguments.length > 0
+                             && this.isFunction(callback) ) {
+                            for ( ; i < this.length ; i++ ) {
+                                tools.bindEvent(this[i], 'dblclick', callback, args, false);								
+                                output.push(this[i])
+                            }
+
+                            return output
+                        }
 
                         return
                     },
@@ -616,6 +643,21 @@
                         top: t,
                         left: l
                     }
+                },
+                bindEvent: function(ele, eventName, callback, args, bubble) {
+                    if ( ele.addEventListener ) {
+                        if ( null !== args ) {
+                            ele.addEventListener(eventName, callback.bind(ele, args), "undefined" !== typeof bubble ? bubble : false);
+                        } else {
+                            ele.addEventListener(eventName, callback.bind(ele), "undefined" !== typeof  bubble ? bubble : false);
+                        }
+                    } else if ( this[i].attachEvent ) {
+                        if ( null !== args ) {
+                            ele.attachEvent(eventName, callback.bind(ele, args));
+                        } else {
+                            ele.attachEvent(eventName, callback.bind(ele));
+                        }
+                    }	
                 },
                 matchesSelector: function( ele, domSelector ) {
                     if ("function" === typeof ele.oMatchesSelector) 
