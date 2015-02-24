@@ -7,7 +7,7 @@
         isReady = false,
         readyCallback = null;
 
-    return (function loadModule(moduleList, initFunction) {
+    return (function loadModule(moduleList, initFunction, extendList) {
         return moduleList[initFunction].call(this, moduleList);
     })({
         modules: {
@@ -606,8 +606,82 @@
                         var output = tools.handleEvent(this, 'focusout', tools, arguments);
                         return
                     },
-                    off: function() {
+                    unload: function() {
+                        var output = tools.handleEvent(this, 'unload', tools, arguments);
                         return
+                    },
+                    select: function() {
+                        var output = tools.handleEvent(this, 'select', tools, arguments);
+                        return
+                    },
+                    submit: function() {
+                        var output = tools.handleEvent(this, 'submit', tools, arguments);
+                        return
+                    },
+                    scroll: function() {
+                        var output = tools.handleEvent(this, 'scroll', tools, arguments);
+                        return
+                    },
+                    resize: function() {
+                        var output = tools.handleEvent(this, 'resize', tools, arguments);
+                        return
+                    },
+                    off: function() {
+                        // 0 - event, 1 - selector, 2 - handler
+                        var eventName = null,
+                            domSelector = null,
+                            handler = null,
+                            i = 0,
+                            output = [];
+
+                        if ( this.length > 0 ) {
+                            if ( 3 === arguments.length 
+                                 && "function" === typeof arguments[2]) {
+                                eventName = arguments[0];
+                                domSelector = arguments[1];
+                                handler = arguments[2];
+
+                                for ( ; i < this.length ; i++ ) {
+                                    if ( !domSelector 
+                                         || (tools.stringNotBlank(domSelector) && tools.matchesSelector(this[i], domSelector)) ) {
+                                        if ( "undefined" !== typeof this[i].removeEventListener ) {
+                                            this[i].removeEventListener(eventName, handler, false);
+                                        } 
+                                    }							
+                                }
+                            } else if ( 2 === arguments.length ) {
+                                eventName = arguments[0];
+                                domSelector = arguments[1];
+
+                                for ( ; i < this.length ; i++ ) {
+                                    if ( !domSelector 
+                                         || (tools.stringNotBlank(domSelector) && tools.matchesSelector(this[i], domSelector)) ) {
+                                        if ( "undefined" !== typeof this[i].removeEventListener ) {
+                                            this[i].removeEventListener(eventName, handler, false);
+                                        } 
+                                    }							
+                                }
+                            } else if ( 1 === arguments.length ) {
+                                eventName = arguments[0];
+
+
+                            } else {
+                                // Remove all
+
+
+                            }			
+                            /*
+                        for ( ; i < this.length ; i++ ) {
+                            if ( !domSelector 
+                                 || (tools.stringNotBlank(domSelector) && tools.matchesSelector(this[i], domSelector)) ) {
+                                this[i].parentNode.removeChild(this[i])
+                            }							
+                            
+                        }
+                            */
+                        }
+
+                        return output
                     },
                     trigger: function() {
                         return
@@ -672,13 +746,7 @@
                         } else {
                             ele.addEventListener(eventName, callback.bind(ele), "undefined" !== typeof  bubble ? bubble : false);
                         }
-                    } else if ( this[i].attachEvent ) {
-                        if ( null !== args ) {
-                            ele.attachEvent(eventName, callback.bind(ele, args));
-                        } else {
-                            ele.attachEvent(eventName, callback.bind(ele));
-                        }
-                    }	
+                    } 
                 },
                 handleEvent: function(that, eventName, tools, arguments) {
                     var	output = [],
@@ -873,9 +941,7 @@
             DOMReady = function() {
                 if ( "undefined" !== typeof document.removeEventListener ) {
                     document.removeEventListener("DOMContentLoaded", DOMReady, false);
-                } else if ( "undefined" !== typeof document.detachEvent ) {
-                    document.detachEvent("onreadystatechange", DOMReady);
-                }
+                } 
 
                 if ( null !== readyCallback ) {
                     readyCallback.apply($)
@@ -886,11 +952,9 @@
 
             if ( "undefined" !== typeof document.addEventListener ) {
                 document.addEventListener("DOMContentLoaded", DOMReady, false)
-            } else if ( "undefined" !== typeof document.attachEvent ) {
-                document.attachEvent("onreadystatechange", DOMReady)
             }
 
             return $
         }
-    }, 'init'); 
+    }, 'init', {}); 
 });
