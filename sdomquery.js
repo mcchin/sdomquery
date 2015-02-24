@@ -531,25 +531,85 @@
                         return output
                     },
                     mouseover: function() {
-
-                        return
+                        var output = tools.handleEvent(this, 'mouseover', tools, arguments);
+                        return output
                     },
-                    hover: function() {
-                        return
+                    mouseout: function() {
+                        var output = tools.handleEvent(this, 'mouseout', tools, arguments);
+                        return output
                     },
                     mouseup: function() {
-                        return
+                        var output = tools.handleEvent(this, 'mouseup', tools, arguments);
+                        return output
                     },	
                     mousedown: function() {
-                        return
+                        var output = tools.handleEvent(this, 'mousedown', tools, arguments);
+                        return output
                     },
                     mouseleave: function() {
-                        return
+                        var output = tools.handleEvent(this, 'mouseleave', tools, arguments);
+                        return output
                     },
                     mouseenter: function() {
+                        var output = tools.handleEvent(this, 'mouseenter', tools, arguments);
+                        return output
+                    },
+                    hover: function() {
+                        var output = [],
+                            callbackIn = null,
+                            callbackOut = null;
+
+                        if ( 2 === arguments.length ) {
+                            callbackIn = arguments[0];
+                            callbackOut = arguments[1];
+                        } else if ( 1 === arguments.length ) {
+                            callbackIn = arguments[0];
+                            callbackOut = arguments[0];
+                        }
+
+                        if ( arguments.length ) {
+                            output = tools.handleEvent(this, 'mouseleave', tools, [callbackIn]);
+                            tools.handleEvent(this, 'mouseenter', tools, [callbackOut]);
+                        }
+
+                        return output
+                    },
+                    keyup: function() {
+                        var output = tools.handleEvent(this, 'keyup', tools, arguments);
                         return
                     },
-                    unbind: function() {
+                    keydown: function() {
+                        var output = tools.handleEvent(this, 'keydown', tools, arguments);
+                        return
+                    },
+                    keypress: function() {
+                        var output = tools.handleEvent(this, 'keypress', tools, arguments);
+                        return
+                    },
+                    change: function() {
+                        var output = tools.handleEvent(this, 'change', tools, arguments);
+                        return
+                    },
+                    blur: function() {
+                        var output = tools.handleEvent(this, 'blur', tools, arguments);
+                        return
+                    },
+                    focus: function() {
+                        var output = tools.handleEvent(this, 'focus', tools, arguments);
+                        return
+                    },
+                    focusin: function() {
+                        var output = tools.handleEvent(this, 'focusin', tools, arguments);
+                        return
+                    },
+                    focusout: function() {
+                        var output = tools.handleEvent(this, 'focusout', tools, arguments);
+                        return
+                    },
+                    off: function() {
+                        return
+                    },
+                    trigger: function() {
                         return
                     }
                 }
