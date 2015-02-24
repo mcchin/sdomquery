@@ -186,12 +186,12 @@
 										} while ( obj = obj.offsetParent )
 									}
 
+									// Considering scrollTop, scrollLeft?
+
 									// Need to find way to convert %, rem, em, and etc to px
 									$(this[i]).css(coords);
 									t = parseFloat($(this[i]).css('top')) || 0;
 									l = parseFloat($(this[i]).css('left')) || 0;
-									//t = parseFloat(this[i].offsetTop) || 0;
-									//l = parseFloat(this[i].offsetLeft) || 0;
 
 									$(this[i]).css({
 										top: (parseFloat(t - parentTop) || 0) + 'px', 
@@ -243,11 +243,32 @@
 
 						return
 					},
-					scrollTop: function() {
-
+					scrollTop: function(top) {
+						if ( this.length > 0 ) {
+							if ( top ) {
+								if ( this.isNumeric(top) ) {
+									this[0].scrollTop = parseFloat(top) || 0;
+								}
+								return [this[0]]
+							} else {
+								return parseFloat(this[0].scrollTop) || 0
+							}
+						}	
+						return
 					},
-					scrollLeft: function() {
+					scrollLeft: function(left) {
 
+						if ( this.length > 0 ) {
+							if ( left ) {
+								if ( this.isNumeric(left) ) {
+									this[0].scrollLeft = parseFloat(left) || 0;
+								}
+								return [this[0]]
+							} else {
+								return parseFloat(this[0].scrollLeft) || 0	
+							}							
+						}	
+						return
 					}
 				}
 			},
