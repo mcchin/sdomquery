@@ -519,58 +519,19 @@
                         }
                     }.bind(this),
                     click: function() {
-                        var output = [],
-                            callback = null,
-                            args = null,
-                            i = 0;
-
-                        if ( 2 === arguments.length ) {
-                            args = arguments[0];
-                            callback = arguments[1];
-                        } else if ( 1 === arguments.length ) {
-                            callback = arguments[0];
-                        }
-
-                        if ( this.length > 0 
-                             && arguments.length > 0
-                             && this.isFunction(callback) ) {
-                            for ( ; i < this.length ; i++ ) {
-                                tools.bindEvent(this[i], 'click', callback, args, false);
-                                output.push(this[i])
-                            }
-
-                            return output
-                        }
-
-                        return
+                        var output = tools.handleEvent(this, 'click', tools, arguments);
+                        return output
                     },
                     dblclick: function() {
-                        var output = [],
-                            callback = null,
-                            args = null,						
-                            i = 0;
-
-                        if ( 2 === arguments.length ) {
-                            args = arguments[0];
-                            callback = arguments[1];
-                        } else if ( 1 === arguments.length ) {
-                            callback = arguments[0];
-                        }
-
-                        if ( this.length > 0 
-                             && arguments.length > 0
-                             && this.isFunction(callback) ) {
-                            for ( ; i < this.length ; i++ ) {
-                                tools.bindEvent(this[i], 'dblclick', callback, args, false);								
-                                output.push(this[i])
-                            }
-
-                            return output
-                        }
-
-                        return
+                        var output = tools.handleEvent(this, 'dblclick', tools, arguments);
+                        return output
+                    },
+                    mousemove: function() {
+                        var output = tools.handleEvent(this, 'mousemove', tools, arguments);
+                        return output
                     },
                     mouseover: function() {
+
                         return
                     },
                     hover: function() {
@@ -589,7 +550,7 @@
                         return
                     },
                     unbind: function() {
-
+                        return
                     }
                 }
             }
@@ -658,6 +619,30 @@
                             ele.attachEvent(eventName, callback.bind(ele));
                         }
                     }	
+                },
+                handleEvent: function(that, eventName, tools, arguments) {
+                    var	output = [],
+                        callback = null,
+                        args = null,
+                        i = 0;
+
+                    if ( 2 === arguments.length ) {
+                        args = arguments[0];
+                        callback = arguments[1];
+                    } else if ( 1 === arguments.length ) {
+                        callback = arguments[0];
+                    }
+
+                    if ( that.length > 0 
+                         && arguments.length > 0
+                         && that.isFunction(callback) ) {
+                        for ( ; i < that.length ; i++ ) {
+                            tools.bindEvent(that[i], eventName, callback, args, false);
+                            output.push(that[i])
+                        }
+                    }
+
+                    return output
                 },
                 matchesSelector: function( ele, domSelector ) {
                     if ("function" === typeof ele.oMatchesSelector) 
