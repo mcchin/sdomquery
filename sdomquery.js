@@ -2,7 +2,9 @@
     var obj;
     "undefined" !== typeof window ? obj = window : "undefined" !== typeof global ? obj = global : "undefined" !== typeof self && (obj = self), obj.sDomQuery = obj.$ = sDomQuery();
 } (function() {
-    var domEventListener = "undefined" !== typeof document.addEventListener ? document.addEventListener : "undefined" !== typeof document.attachEvent ? document.attachEvent : null;
+    var isReady = false,
+        readyCallback = null;
+
     return (function loadModule(moduleList, initFunction) {
         return moduleList[initFunction].call(this, moduleList);
     })({
@@ -505,7 +507,14 @@
             events: function(tools) {
                 return {
                     ready: function( callback ) {
-                        //callback.apply(this, arguments);
+                        if ( sDomQuery.isFunction(callback) ) {
+                            readyCallback = callback;
+                            if ( isReady ) {
+                                callback.apply(sDomQuery)
+                            } else {
+                                setTimeout(sDomQuery.ready, 1)
+                            }
+                        }
                     },
                     click: function() {
                         return
@@ -749,6 +758,26 @@
             }
 
             $ = moduleList['selector'].call(this, functionList, utilityList, tools);
+
+            DOMReady = function() {
+                if ( document.addEventListener ) {
+                    document.removeEventListener("DOMContentLoaded", DOMReady, false);
+                } else if ( document.attachEvent ) {
+                    document.detachEvent("onreadystatechange", DOMReady);
+                }
+
+                if ( null !== readyCallback ) {
+                    readyCallback.apply($)
+                }
+
+                isReady = true;
+            }
+
+            if ( "undefined" !== typeof document.addEventListener ) {
+                document.addEventListener("DOMContentLoaded", DOMReady, false)
+            } else if ( "undefined" !== typeof document.attachEvent ) {
+                document.attachEvent("onreadystatechange", DOMReady)
+            }
 
             return $
         }
