@@ -158,6 +158,8 @@
 					},
 					offset: function(coords) {
 						var output = [],
+							parentLeft = parentTop = l = t = 0,
+							obj = null,						
 							i = 0;
 
 						if ( this.length > 0 ) {
@@ -167,15 +169,35 @@
 
 							if ( this.isPlainObject(coords) ) {
 								for ( ; i < this.length ; i++ ) {
-									if ( $(this[i]).css('position') !== 'absolute' ) {
+									if ( 'absolute' !== $(this[i]).css('position') 
+									     && 'fixed' !== $(this[i]).css('position') ) {
 										$(this[i]).css('position', 'relative')
 									}
 
 									coords.top = this.isNumeric(coords.top) ? coords.top + 'px' : coords.top;
 									coords.left = this.isNumeric(coords.left) ? coords.left + 'px' : coords.left;
 
+									if ( this[i].offsetParent &&
+										 'fixed' !== $(this[i]).css('position') ) {
+										obj = this[i].offsetParent;
+										do { 
+											parentTop += obj.offsetTop;// + (parseFloat(obj.style.top) || 0);
+											parentLeft += obj.offsetLeft;// + (parseFloat(obj.style.left) || 0);
+										} while ( obj = obj.offsetParent )
+									}
+
+									// Need to find way to convert %, rem, em, and etc to px
 									$(this[i]).css(coords);
-									
+									t = parseFloat($(this[i]).css('top')) || 0;
+									l = parseFloat($(this[i]).css('left')) || 0;
+									//t = parseFloat(this[i].offsetTop) || 0;
+									//l = parseFloat(this[i].offsetLeft) || 0;
+
+									$(this[i]).css({
+										top: (parseFloat(t - parentTop) || 0) + 'px', 
+										left: (parseFloat(l - parentLeft) || 0) + 'px'
+									});
+
 									output.push(this[i])
 								}
 								
@@ -187,9 +209,45 @@
 
 						return
 					},
-					position: function() {
+					position: function(coords) {
+						var output = [],
+							i = 0;
+
+						if ( this.length > 0 ) {
+							if ( this.isFunction(coords) ) {
+								coords = coords.call(this)
+							}
+
+							if ( this.isPlainObject(coords) ) {
+								for ( ; i < this.length ; i++ ) {
+									if ( 'absolute' !== $(this[i]).css('position') 
+									     && 'fixed' !== $(this[i]).css('position') ) {
+										$(this[i]).css('position', 'relative')
+									}
+
+									coords.top = this.isNumeric(coords.top) ? coords.top + 'px' : coords.top;
+									coords.left = this.isNumeric(coords.left) ? coords.left + 'px' : coords.left;
+
+									$(this[i]).css(coords);
+									output.push(this[i])
+								}
+								
+								return output
+							} else {
+								return {
+									top: this[0].offsetTop,
+									left: this[0].offsetLeft
+								}
+							}
+						}
 
 						return
+					},
+					scrollTop: function() {
+
+					},
+					scrollLeft: function() {
+
 					}
 				}
 			},
