@@ -642,45 +642,22 @@
                                 eventName = arguments[0];
                                 domSelector = arguments[1];
                                 handler = arguments[2];
-
-                                for ( ; i < this.length ; i++ ) {
-                                    if ( !domSelector 
-                                         || (helper.stringNotBlank(domSelector) && helper.matchesSelector(this[i], domSelector)) ) {
-                                        if ( "undefined" !== typeof this[i].removeEventListener ) {
-                                            this[i].removeEventListener(eventName, handler, false);
-                                        } 
-                                    }							
-                                }
                             } else if ( 2 === arguments.length ) {
                                 eventName = arguments[0];
                                 domSelector = arguments[1];
-
-                                for ( ; i < this.length ; i++ ) {
-                                    if ( !domSelector 
-                                         || (helper.stringNotBlank(domSelector) && helper.matchesSelector(this[i], domSelector)) ) {
-                                        if ( "undefined" !== typeof this[i].removeEventListener ) {
-                                            this[i].removeEventListener(eventName, handler, false);
-                                        } 
-                                    }							
-                                }
                             } else if ( 1 === arguments.length ) {
                                 eventName = arguments[0];
+                            } 
 
-
-                            } else {
-                                // Remove all
-
-
-                            }			
-                            /*
-                        for ( ; i < this.length ; i++ ) {
-                            if ( !domSelector 
-                                 || (helper.stringNotBlank(domSelector) && helper.matchesSelector(this[i], domSelector)) ) {
-                                this[i].parentNode.removeChild(this[i])
+                            for ( ; i < this.length ; i++ ) {
+                                if ( !domSelector 
+                                     || (helper.stringNotBlank(domSelector) && helper.matchesSelector(this[i], domSelector)) ) {
+                                    if ( "undefined" !== typeof this[i].removeEventListener ) {
+                                        helper.unbindEvent(this[i], eventName ? eventName : null, handler ? handler : null);
+                                    } 
+                                }
                             }							
-                            
-                        }
-                            */
+
                         }
 
                         return output
@@ -741,18 +718,39 @@
                         left: l
                     }
                 },
-                bindEvent: function(ele, eventName, callback, args, bubble) {
+                bindEvent: function(ele, eventName, callback, capture) {
                     if ( ele.addEventListener ) {
-                        if ( null !== args ) {
-                            ele.addEventListener(eventName, callback.bind(ele, args), "undefined" !== typeof bubble ? bubble : false);
-                        } else {
-                            ele.addEventListener(eventName, callback.bind(ele), "undefined" !== typeof  bubble ? bubble : false);
-                        }
+                        ele.addEventListener(eventName, callback, "undefined" !== typeof capture ? capture : false);
                     } 
+                },
+                unbindEvent: function(ele, eventName, callback, capture) {
+                    var i = 0,
+                        remove = [],
+                        eventObj = null;
+
+                    if ( "undefined" !== typeof ele[sDomQuery.uuid]
+                         && "undefined" !== typeof ele.removeEventListener ) {
+                        
+                        eventObj = ele[sDomQuery.uuid];
+
+                        do {
+                            if ( !callback 
+                                 || (!callback && !eventName)
+                                 || (!callback && eventName === eventObj[i].eventName)
+                                 || (callback.guid === eventObj[i].guid && eventName === eventObj[i].eventName) ) {
+
+                                ele.removeEventListener(eventObj[i].eventName, eventObj[i].callback, eventObj[i].capture);
+                                eventObj.splice(i,1);
+                            } else {
+                                i++;
+                            }
+                        } while ( i < eventObj.length && eventObj.length )
+                    }
                 },
                 handleEvent: function(that, eventName, helper, arguments) {
                     var	output = [],
                         callback = null,
+                        callbackStore = null,
                         args = null,
                         i = 0;
 
@@ -766,8 +764,39 @@
                     if ( that.length > 0 
                          && arguments.length > 0
                          && that.isFunction(callback) ) {
+
+                        if ( "undefined" === typeof callback.guid ) {
+                            callback.guid = ++sDomQuery.guid;
+                        }
+
                         for ( ; i < that.length ; i++ ) {
-                            helper.bindEvent(that[i], eventName, callback, args, false);
+                            if ( "undefined" === typeof that[i][sDomQuery.uuid]) {
+                                that[i][sDomQuery.uuid] = [];
+                            }							
+
+                            callbackStore = callback;
+                            if ( null !== args ) {
+                                callbackStore = callbackStore.bind(that[i], args);
+                            } else {
+                                callbackStore = callbackStore.bind(that[i]);
+                            }
+
+                            that[i][sDomQuery.uuid].push({
+                                guid: callback.guid,
+                                eventName: eventName,
+                                callback: callbackStore,
+                                args: args,
+                                capture: false
+                            });
+
+                            helper.bindEvent(
+                                that[i]
+                                , eventName
+                                , callbackStore
+                                , args
+                                , false
+                            );
+
                             output.push(that[i])
                         }
                     }
