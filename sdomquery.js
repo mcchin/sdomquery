@@ -875,11 +875,44 @@
 
                   return mergeTarget
                 },
-                append: function () {
+                append: function(html) {
+                    var i = 0,
+                        output = [];
 
+                    if ( this.length > 0 
+                         && helper.stringNotBlank(html) ) {
+
+                        for ( ; i < this.length ; i++ ) {
+                            this[i].innerHTML += html;
+                            output.push(this[i])
+                        }
+                    }
+
+                    return output
                 },
-                prepend: function() {
+                prepend: function(html) {
+                    var i = 0,
+                        output = [],
+                        tmpElement = null;					
+                    
+                    if ( this.length > 0 
+                         && helper.stringNotBlank(html) ) {
 
+                        for ( ; i < this.length ; i++ ) {
+                            tmpElement = document.createElement('div');
+                            tmpElement.innerHTML = html;
+                            tmpElement = tmpElement.firstChild;
+
+                            if ( !this[i].firstChild ) {
+                                this[i].appendChild(tmpElement)
+                            } else {
+                                this[i].insertBefore(tmpElement, this[i].firstChild)
+                            }
+                            output.push(this[i])
+                        }
+                    }
+                    
+                    return output
                 },
                 isNumeric: function(obj) {
                     return 0 === (obj - parseFloat(obj))
