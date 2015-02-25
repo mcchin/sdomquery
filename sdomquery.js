@@ -11,14 +11,14 @@
         return moduleList[initFunction].call(this, moduleList);
     })({
         modules: {
-            css: function(tools) {
+            css: function(helper) {
                 return {
                     addClass: function(className) {
                         var i = 0;
 
-                        if ( tools.stringNotBlank(className) ) {
+                        if ( helper.stringNotBlank(className) ) {
                             for ( ; i < this.length ; i++ ) {
-                                if ( !tools.matchString(this[i].className, className) ) {
+                                if ( !helper.matchString(this[i].className, className) ) {
                                     this[i].className += " " + className;
                                 }
                             }
@@ -29,7 +29,7 @@
                     removeClass: function(className) {
                         var i = 0;
 
-                        if ( tools.stringNotBlank(className) ) {
+                        if ( helper.stringNotBlank(className) ) {
                             for ( ; i < this.length ; i++ ) {
                                 if ( this[i].className ) {
                                     this[i].className = this[i].className
@@ -45,10 +45,10 @@
                     hasClass: function(className) {
                         var i = 0;
 
-                        if ( tools.stringNotBlank(className) ) {
+                        if ( helper.stringNotBlank(className) ) {
                             for ( ; i < this.length ; i++ ) {
                                 if ( this[i].className 
-                                     && tools.matchString(this[i].className, className) ) {
+                                     && helper.matchString(this[i].className, className) ) {
                                     return true;
                                 }
                             }
@@ -61,24 +61,26 @@
                             output = {},
                             i = 0;
 
-                        if ( 1 === arguments.length && "string" === typeof arguments[0] ) {
-                            return this[0].style[tools.camelCase(arguments[0])];
-                        } else if ( 1 === arguments.length && this.isArray(arguments[0]) ) {
-                            for ( ; i < arguments[0].length ; i++ ) {
-                                output[arguments[0][i]] = this[0].style[tools.camelCase(arguments[0][i])];
+                        if ( this.length > 0 ) {
+                            if ( 1 === arguments.length && "string" === typeof arguments[0] ) {
+                                return this[0].style[helper.camelCase(arguments[0])];
+                            } else if ( 1 === arguments.length && this.isArray(arguments[0]) ) {
+                                for ( ; i < arguments[0].length ; i++ ) {
+                                    output[arguments[0][i]] = this[0].style[helper.camelCase(arguments[0][i])];
+                                }
+                                return output;
+                            } else if ( 1 === arguments.length && "object" === typeof arguments[0] ) {
+                                for ( var prop in arguments[0] ) {
+                                    styles[helper.camelCase(prop)] = arguments[0][prop];
+                                }
+                            } else if ( 2 === arguments.length ) {
+                                styles[helper.camelCase(arguments[0])] = arguments[1];
                             }
-                            return output;
-                        } else if ( 1 === arguments.length && "object" === typeof arguments[0] ) {
-                            for ( var prop in arguments[0] ) {
-                                styles[tools.camelCase(prop)] = arguments[0][prop];
-                            }
-                        } else if ( 2 === arguments.length ) {
-                            styles[tools.camelCase(arguments[0])] = arguments[1];
-                        }
 
-                        for ( var prop in styles ) {
-                            for ( i = 0 ; i < this.length ; i++ ) {
-                                this[i].style[prop] = styles[prop];
+                            for ( var prop in styles ) {
+                                for ( i = 0 ; i < this.length ; i++ ) {
+                                    this[i].style[prop] = styles[prop];
+                                }
                             }
                         }
 
@@ -86,20 +88,20 @@
                     },
                     styles: function() {
                         if ( this.length > 0 ) {
-                            return tools.getStyles(this[0])
+                            return helper.getStyles(this[0])
                         }
 
                         return
                     }
                 };
             },
-            position: function(tools) {
+            position: function(helper) {
                 return {
                     height: function() {
                         var styles = null;
 
                         if ( this.length > 0 ) {
-                            styles = tools.getStyles(this[0]);
+                            styles = helper.getStyles(this[0]);
 
                             return parseFloat(styles.height)
                         }
@@ -110,7 +112,7 @@
                         var styles = null;
 
                         if ( this.length > 0 ) {
-                            styles = tools.getStyles(this[0]);
+                            styles = helper.getStyles(this[0]);
                             return parseFloat(styles.width)
                         }
 
@@ -134,7 +136,7 @@
                         var styles = null;
 
                         if ( this.length > 0 ) {
-                            styles = tools.getStyles(this[0]);
+                            styles = helper.getStyles(this[0]);
 
                             return parseFloat(styles.height) 
                                    + parseFloat(styles.paddingTop) 
@@ -149,7 +151,7 @@
                         var styles = null;
 
                         if ( this.length > 0 ) {
-                            styles = tools.getStyles(this[0]);
+                            styles = helper.getStyles(this[0]);
 
                             return parseFloat(styles.width) 
                                    + parseFloat(styles.paddingLeft) 
@@ -207,7 +209,7 @@
                                 
                                 return output
                             } else {
-                                return tools.findOffset(this[0])
+                                return helper.findOffset(this[0])
                             }
                         }
 
@@ -276,7 +278,7 @@
                     }
                 }
             },
-            traverse: function(tools) {
+            traverse: function(helper) {
                 return {
                     find: function(domSelector) {
                         var output = [],
@@ -284,7 +286,7 @@
                             j = 0,
                             child = null;
 
-                        if ( tools.stringNotBlank(domSelector) ) {
+                        if ( helper.stringNotBlank(domSelector) ) {
                             for ( ; i < this.length ; i++ ) {
                                 if ( "undefined" !== this[i].childNodes ) {
                                     child = this[i].querySelectorAll(domSelector);
@@ -297,14 +299,14 @@
                             }
                         }
 
-                        return tools.wrapper(output);
+                        return helper.wrapper(output);
                     },
                     has: function(domSelector) {
                         var output = [],
                             i = 0,
                             child = null;
 
-                        if ( tools.stringNotBlank(domSelector) ) {
+                        if ( helper.stringNotBlank(domSelector) ) {
                             for ( ; i < this.length ; i++ ) {
                                 if ( "undefined" !== this[i].childNodes ) {
                                     child = this[i].querySelectorAll(domSelector);
@@ -313,7 +315,7 @@
                                     }
                                 }
                             }
-                            return tools.wrapper(output);
+                            return helper.wrapper(output);
                         }
 
                         return 
@@ -326,7 +328,7 @@
 
                         for ( ; i < this.length ; i++ ) {
                             if ( "undefined" !== this[i].childNodes ) {
-                                if ( tools.stringNotBlank(domSelector) ) {
+                                if ( helper.stringNotBlank(domSelector) ) {
                                     child = this[i].querySelectorAll(domSelector);
                                     if ( child.length ) {
                                         for(var j = 0 ; j < child.length ; j++ ) {
@@ -346,7 +348,7 @@
                             }
                         }
 
-                        return tools.wrapper(output);
+                        return helper.wrapper(output);
                     },
                     parent: function(domSelector) {
                         var output = [],
@@ -357,7 +359,7 @@
 
                         for ( ; i < this.length ; i++ ) {
                             // Need more efficient logic here
-                            if ( tools.stringNotBlank(domSelector) ) {
+                            if ( helper.stringNotBlank(domSelector) ) {
                                 parent = this[i].parentNode;
                                 if ( "undefined" !== parent.parentNode
                                      && 1 === parent.parentNode.nodeType ) {
@@ -366,28 +368,28 @@
                                         for(var j = 0 ; j < child.length ; j++ ) {
                                             if ( child[j].parentNode === parent.parentNode ) {
                                                 if (child[j] === parent ) {
-                                                    tools.pushUniq(output, child[j]);
+                                                    helper.pushUniq(output, child[j]);
                                                 }
                                             }
                                         } 
                                     }										
                                 }						
                             } else {									
-                                tools.pushUniq(output, this[i].parentNode)
+                                helper.pushUniq(output, this[i].parentNode)
                             }
                         }
 
-                        return tools.wrapper(output);
+                        return helper.wrapper(output);
                     },
                     first: function() {
                         if ( this.length ) {
-                            return tools.wrapper([this[0]])
+                            return helper.wrapper([this[0]])
                         }
                         return 
                     },
                     last: function() {
                         if ( this.length ) {
-                            return tools.wrapper([this[this.length - 1]])
+                            return helper.wrapper([this[this.length - 1]])
                         }						
                         return 
                     },
@@ -402,15 +404,15 @@
                             while ( null !== nextSibling ) {
                                 if ( 1 === nextSibling.nodeType ) {
                                     if ( !domSelector 
-                                         || (tools.stringNotBlank(domSelector) && tools.matchesSelector(nextSibling, domSelector)) ) {
-                                        tools.pushUniq(output, nextSibling)
+                                         || (helper.stringNotBlank(domSelector) && helper.matchesSelector(nextSibling, domSelector)) ) {
+                                        helper.pushUniq(output, nextSibling)
                                     }
                                 }
                                 nextSibling = nextSibling.nextSibling;
                             }
                         }
 
-                        return tools.wrapper(output);
+                        return helper.wrapper(output);
                     },
                     prev: function(domSelector) {
                         var output = [],
@@ -423,32 +425,32 @@
                             while ( null !== prevSibling ) {
                                 if ( 1 === prevSibling.nodeType ) {
                                     if ( !domSelector 
-                                         || (tools.stringNotBlank(domSelector) && tools.matchesSelector(prevSibling, domSelector)) ) {									
-                                        tools.pushUniq(output, prevSibling)
+                                         || (helper.stringNotBlank(domSelector) && helper.matchesSelector(prevSibling, domSelector)) ) {									
+                                        helper.pushUniq(output, prevSibling)
                                     }
                                 }
                                 prevSibling = prevSibling.previousSibling;
                             }
                         }
 
-                        return tools.wrapper(output);
+                        return helper.wrapper(output);
                     },
                     get: function(idx) {
                         if ( this.length && "undefined" !== this[idx] ) {
-                            return tools.wrapper([this[idx]])
+                            return helper.wrapper([this[idx]])
                         }
                         return 
                     }				
                 }
             },
-            manipulation: function(tools) {
+            manipulation: function(helper) {
                 return {
                     remove: function(domSelector) {
                         var i = 0;
 
                         for ( ; i < this.length ; i++ ) {
                             if ( !domSelector 
-                                 || (tools.stringNotBlank(domSelector) && tools.matchesSelector(this[i], domSelector)) ) {
+                                 || (helper.stringNotBlank(domSelector) && helper.matchesSelector(this[i], domSelector)) ) {
                                 this[i].parentNode.removeChild(this[i])
                             }							
                             
@@ -461,7 +463,7 @@
 
                         for ( ; i < this.length ; i++ ) {
                             if ( !domSelector 
-                                 || (tools.stringNotBlank(domSelector) && tools.matchesSelector(this[i], domSelector)) ) {
+                                 || (helper.stringNotBlank(domSelector) && helper.matchesSelector(this[i], domSelector)) ) {
                                 this[i].innerHTML = ''
                             }							
                             
@@ -506,52 +508,52 @@
                     }
                 }
             },
-            events: function(tools) {
+            events: function(helper) {
                 return {
                     ready: function(callback) {
                         if ( sDomQuery.isFunction(callback) ) {
                             readyCallback = callback;
                             if ( isReady ) {
-                                callback.apply(sDomQuery)
+                                callback.apply(this[0])
                             } else {
-                                setTimeout(sDomQuery.ready, 1)
+                                setTimeout(this.ready, 1)
                             }
                         }
-                    }.bind(this),
+                    },
                     click: function() {
-                        var output = tools.handleEvent(this, 'click', tools, arguments);
+                        var output = helper.handleEvent(this, 'click', helper, arguments);
                         return output
                     },
                     dblclick: function() {
-                        var output = tools.handleEvent(this, 'dblclick', tools, arguments);
+                        var output = helper.handleEvent(this, 'dblclick', helper, arguments);
                         return output
                     },
                     mousemove: function() {
-                        var output = tools.handleEvent(this, 'mousemove', tools, arguments);
+                        var output = helper.handleEvent(this, 'mousemove', helper, arguments);
                         return output
                     },
                     mouseover: function() {
-                        var output = tools.handleEvent(this, 'mouseover', tools, arguments);
+                        var output = helper.handleEvent(this, 'mouseover', helper, arguments);
                         return output
                     },
                     mouseout: function() {
-                        var output = tools.handleEvent(this, 'mouseout', tools, arguments);
+                        var output = helper.handleEvent(this, 'mouseout', helper, arguments);
                         return output
                     },
                     mouseup: function() {
-                        var output = tools.handleEvent(this, 'mouseup', tools, arguments);
+                        var output = helper.handleEvent(this, 'mouseup', helper, arguments);
                         return output
                     },	
                     mousedown: function() {
-                        var output = tools.handleEvent(this, 'mousedown', tools, arguments);
+                        var output = helper.handleEvent(this, 'mousedown', helper, arguments);
                         return output
                     },
                     mouseleave: function() {
-                        var output = tools.handleEvent(this, 'mouseleave', tools, arguments);
+                        var output = helper.handleEvent(this, 'mouseleave', helper, arguments);
                         return output
                     },
                     mouseenter: function() {
-                        var output = tools.handleEvent(this, 'mouseenter', tools, arguments);
+                        var output = helper.handleEvent(this, 'mouseenter', helper, arguments);
                         return output
                     },
                     hover: function() {
@@ -568,62 +570,62 @@
                         }
 
                         if ( arguments.length ) {
-                            output = tools.handleEvent(this, 'mouseleave', tools, [callbackIn]);
-                            tools.handleEvent(this, 'mouseenter', tools, [callbackOut]);
+                            output = helper.handleEvent(this, 'mouseleave', helper, [callbackIn]);
+                            helper.handleEvent(this, 'mouseenter', helper, [callbackOut]);
                         }
 
                         return output
                     },
                     keyup: function() {
-                        var output = tools.handleEvent(this, 'keyup', tools, arguments);
+                        var output = helper.handleEvent(this, 'keyup', helper, arguments);
                         return
                     },
                     keydown: function() {
-                        var output = tools.handleEvent(this, 'keydown', tools, arguments);
+                        var output = helper.handleEvent(this, 'keydown', helper, arguments);
                         return
                     },
                     keypress: function() {
-                        var output = tools.handleEvent(this, 'keypress', tools, arguments);
+                        var output = helper.handleEvent(this, 'keypress', helper, arguments);
                         return
                     },
                     change: function() {
-                        var output = tools.handleEvent(this, 'change', tools, arguments);
+                        var output = helper.handleEvent(this, 'change', helper, arguments);
                         return
                     },
                     blur: function() {
-                        var output = tools.handleEvent(this, 'blur', tools, arguments);
+                        var output = helper.handleEvent(this, 'blur', helper, arguments);
                         return
                     },
                     focus: function() {
-                        var output = tools.handleEvent(this, 'focus', tools, arguments);
+                        var output = helper.handleEvent(this, 'focus', helper, arguments);
                         return
                     },
                     focusin: function() {
-                        var output = tools.handleEvent(this, 'focusin', tools, arguments);
+                        var output = helper.handleEvent(this, 'focusin', helper, arguments);
                         return
                     },
                     focusout: function() {
-                        var output = tools.handleEvent(this, 'focusout', tools, arguments);
+                        var output = helper.handleEvent(this, 'focusout', helper, arguments);
                         return
                     },
                     unload: function() {
-                        var output = tools.handleEvent(this, 'unload', tools, arguments);
+                        var output = helper.handleEvent(this, 'unload', helper, arguments);
                         return
                     },
                     select: function() {
-                        var output = tools.handleEvent(this, 'select', tools, arguments);
+                        var output = helper.handleEvent(this, 'select', helper, arguments);
                         return
                     },
                     submit: function() {
-                        var output = tools.handleEvent(this, 'submit', tools, arguments);
+                        var output = helper.handleEvent(this, 'submit', helper, arguments);
                         return
                     },
                     scroll: function() {
-                        var output = tools.handleEvent(this, 'scroll', tools, arguments);
+                        var output = helper.handleEvent(this, 'scroll', helper, arguments);
                         return
                     },
                     resize: function() {
-                        var output = tools.handleEvent(this, 'resize', tools, arguments);
+                        var output = helper.handleEvent(this, 'resize', helper, arguments);
                         return
                     },
                     off: function() {
@@ -643,7 +645,7 @@
 
                                 for ( ; i < this.length ; i++ ) {
                                     if ( !domSelector 
-                                         || (tools.stringNotBlank(domSelector) && tools.matchesSelector(this[i], domSelector)) ) {
+                                         || (helper.stringNotBlank(domSelector) && helper.matchesSelector(this[i], domSelector)) ) {
                                         if ( "undefined" !== typeof this[i].removeEventListener ) {
                                             this[i].removeEventListener(eventName, handler, false);
                                         } 
@@ -655,7 +657,7 @@
 
                                 for ( ; i < this.length ; i++ ) {
                                     if ( !domSelector 
-                                         || (tools.stringNotBlank(domSelector) && tools.matchesSelector(this[i], domSelector)) ) {
+                                         || (helper.stringNotBlank(domSelector) && helper.matchesSelector(this[i], domSelector)) ) {
                                         if ( "undefined" !== typeof this[i].removeEventListener ) {
                                             this[i].removeEventListener(eventName, handler, false);
                                         } 
@@ -673,7 +675,7 @@
                             /*
                         for ( ; i < this.length ; i++ ) {
                             if ( !domSelector 
-                                 || (tools.stringNotBlank(domSelector) && tools.matchesSelector(this[i], domSelector)) ) {
+                                 || (helper.stringNotBlank(domSelector) && helper.matchesSelector(this[i], domSelector)) ) {
                                 this[i].parentNode.removeChild(this[i])
                             }							
                             
@@ -689,7 +691,7 @@
                 }
             }
         },
-        tools: function() {
+        helper: function() {
             // Internal functions 
             return {
                 matchString: function(haystack, needle) {
@@ -748,7 +750,7 @@
                         }
                     } 
                 },
-                handleEvent: function(that, eventName, tools, arguments) {
+                handleEvent: function(that, eventName, helper, arguments) {
                     var	output = [],
                         callback = null,
                         args = null,
@@ -765,7 +767,7 @@
                          && arguments.length > 0
                          && that.isFunction(callback) ) {
                         for ( ; i < that.length ; i++ ) {
-                            tools.bindEvent(that[i], eventName, callback, args, false);
+                            helper.bindEvent(that[i], eventName, callback, args, false);
                             output.push(that[i])
                         }
                     }
@@ -795,7 +797,7 @@
                 }
             }
         },
-        utils: function(tools) {
+        utils: function(helper) {
             // General utility functions
             return {
                 each: function each() {
@@ -856,10 +858,14 @@
                 }
             }
         },  
-        selector: function(functionList, utilityList, tools) {
+        selector: function(functionList, utilityList, helper) {
             var runOnce = false;
 
             if ( !runOnce ) {
+                // Attach uniq ID
+                wrapper.uuid = 'sDomQuery' + String(Math.random()).substring(2) + Date.now();
+                wrapper.guid = 0;
+
                 // Attach utils and other functions to the core
                 utilityList.extend(wrapper, utilityList);
                 utilityList.extend(sDomQuery.prototype, functionList, utilityList);
@@ -906,21 +912,21 @@
         init: function(moduleList) {
             var functionList = {},
                 utilityList = {},
-                tools = {},
+                helper = {},
                 importList = null,
                 $ = null;
 
-            // Get all the functions defined - Tools - Internal/private functions 
-            importList = moduleList['tools']();
+            // Get all the functions defined - helper - Internal/private functions 
+            importList = moduleList['helper']();
             for ( var _func in importList ) {
-                if ( "undefined" === typeof tools[_func] ) {
-                    tools[_func] = importList[_func];
+                if ( "undefined" === typeof helper[_func] ) {
+                    helper[_func] = importList[_func];
                 }
             }
 
             // Get all the functions defined - Modules 
             for ( var _key in moduleList['modules']) {
-                importList = moduleList['modules'][_key](tools);
+                importList = moduleList['modules'][_key](helper);
                 for ( var _func in importList ) {
                     if ( "undefined" === typeof functionList[_func] ) {
                         functionList[_func] = importList[_func];
@@ -929,14 +935,14 @@
             }
 
             // Get all the functions defined - Utils - This is to expose util for $
-            importList = moduleList['utils'](tools);
+            importList = moduleList['utils'](helper);
             for ( var _func in importList ) {
                 if ( "undefined" === typeof utilityList[_func] ) {
                     utilityList[_func] = importList[_func];
                 }
             }
 
-            $ = moduleList['selector'].call(this, functionList, utilityList, tools);
+            $ = moduleList['selector'].call(this, functionList, utilityList, helper);
 
             DOMReady = function() {
                 if ( "undefined" !== typeof document.removeEventListener ) {
@@ -944,7 +950,7 @@
                 } 
 
                 if ( null !== readyCallback ) {
-                    readyCallback.apply($)
+                    readyCallback.apply(this)
                 }
 
                 isReady = true;
