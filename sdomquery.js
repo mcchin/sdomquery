@@ -682,7 +682,6 @@
                                 }
                             }
                         }
-
                         return output
                     }
                 }
@@ -894,7 +893,20 @@
                 isPlainObject: function(obj) {
                     // Check if variable is a {}
                     return "object" === typeof obj && "Object" === obj.constructor.name
-                }
+                },
+                // Source: [http://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser]
+                // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
+                isOpera: !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0,
+                // Firefox 1.0+
+                isFirefox: typeof InstallTrigger !== 'undefined',   
+                // At least Safari 3+: "[object HTMLElementConstructor]"
+                isSafari: Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0,	
+                // Chrome 1+
+                isChrome: !!window.chrome && !this.isOpera, 
+                // At least IE6
+                isIE: /*@cc_on!@*/false || !!document.documentMode,
+                // IE8 and below
+                isOldIE: navigator.userAgent.match(/MSIE\s(?!9.0)/) ? true : false
             }
         },  
         selector: function(functionList, utilityList, helper) {
