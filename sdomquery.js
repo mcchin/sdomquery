@@ -521,39 +521,39 @@
                         }
                     },
                     click: function() {
-                        var output = helper.handleEvent(this, 'click', helper, arguments);
+                        var output = helper.bindEvent(this, 'click', helper, arguments);
                         return output
                     },
                     dblclick: function() {
-                        var output = helper.handleEvent(this, 'dblclick', helper, arguments);
+                        var output = helper.bindEvent(this, 'dblclick', helper, arguments);
                         return output
                     },
                     mousemove: function() {
-                        var output = helper.handleEvent(this, 'mousemove', helper, arguments);
+                        var output = helper.bindEvent(this, 'mousemove', helper, arguments);
                         return output
                     },
                     mouseover: function() {
-                        var output = helper.handleEvent(this, 'mouseover', helper, arguments);
+                        var output = helper.bindEvent(this, 'mouseover', helper, arguments);
                         return output
                     },
                     mouseout: function() {
-                        var output = helper.handleEvent(this, 'mouseout', helper, arguments);
+                        var output = helper.bindEvent(this, 'mouseout', helper, arguments);
                         return output
                     },
                     mouseup: function() {
-                        var output = helper.handleEvent(this, 'mouseup', helper, arguments);
+                        var output = helper.bindEvent(this, 'mouseup', helper, arguments);
                         return output
                     },	
                     mousedown: function() {
-                        var output = helper.handleEvent(this, 'mousedown', helper, arguments);
+                        var output = helper.bindEvent(this, 'mousedown', helper, arguments);
                         return output
                     },
                     mouseleave: function() {
-                        var output = helper.handleEvent(this, 'mouseleave', helper, arguments);
+                        var output = helper.bindEvent(this, 'mouseleave', helper, arguments);
                         return output
                     },
                     mouseenter: function() {
-                        var output = helper.handleEvent(this, 'mouseenter', helper, arguments);
+                        var output = helper.bindEvent(this, 'mouseenter', helper, arguments);
                         return output
                     },
                     hover: function() {
@@ -570,62 +570,62 @@
                         }
 
                         if ( arguments.length ) {
-                            output = helper.handleEvent(this, 'mouseleave', helper, [callbackIn]);
-                            helper.handleEvent(this, 'mouseenter', helper, [callbackOut]);
+                            output = helper.bindEvent(this, 'mouseleave', helper, [callbackIn]);
+                            helper.bindEvent(this, 'mouseenter', helper, [callbackOut]);
                         }
 
                         return output
                     },
                     keyup: function() {
-                        var output = helper.handleEvent(this, 'keyup', helper, arguments);
+                        var output = helper.bindEvent(this, 'keyup', helper, arguments);
                         return
                     },
                     keydown: function() {
-                        var output = helper.handleEvent(this, 'keydown', helper, arguments);
+                        var output = helper.bindEvent(this, 'keydown', helper, arguments);
                         return
                     },
                     keypress: function() {
-                        var output = helper.handleEvent(this, 'keypress', helper, arguments);
+                        var output = helper.bindEvent(this, 'keypress', helper, arguments);
                         return
                     },
                     change: function() {
-                        var output = helper.handleEvent(this, 'change', helper, arguments);
+                        var output = helper.bindEvent(this, 'change', helper, arguments);
                         return
                     },
                     blur: function() {
-                        var output = helper.handleEvent(this, 'blur', helper, arguments);
+                        var output = helper.bindEvent(this, 'blur', helper, arguments);
                         return
                     },
                     focus: function() {
-                        var output = helper.handleEvent(this, 'focus', helper, arguments);
+                        var output = helper.bindEvent(this, 'focus', helper, arguments);
                         return
                     },
                     focusin: function() {
-                        var output = helper.handleEvent(this, 'focusin', helper, arguments);
+                        var output = helper.bindEvent(this, 'focusin', helper, arguments);
                         return
                     },
                     focusout: function() {
-                        var output = helper.handleEvent(this, 'focusout', helper, arguments);
+                        var output = helper.bindEvent(this, 'focusout', helper, arguments);
                         return
                     },
                     unload: function() {
-                        var output = helper.handleEvent(this, 'unload', helper, arguments);
+                        var output = helper.bindEvent(this, 'unload', helper, arguments);
                         return
                     },
                     select: function() {
-                        var output = helper.handleEvent(this, 'select', helper, arguments);
+                        var output = helper.bindEvent(this, 'select', helper, arguments);
                         return
                     },
                     submit: function() {
-                        var output = helper.handleEvent(this, 'submit', helper, arguments);
+                        var output = helper.bindEvent(this, 'submit', helper, arguments);
                         return
                     },
                     scroll: function() {
-                        var output = helper.handleEvent(this, 'scroll', helper, arguments);
+                        var output = helper.bindEvent(this, 'scroll', helper, arguments);
                         return
                     },
                     resize: function() {
-                        var output = helper.handleEvent(this, 'resize', helper, arguments);
+                        var output = helper.bindEvent(this, 'resize', helper, arguments);
                         return
                     },
                     off: function() {
@@ -654,6 +654,7 @@
                                      || (helper.stringNotBlank(domSelector) && helper.matchesSelector(this[i], domSelector)) ) {
                                     if ( "undefined" !== typeof this[i].removeEventListener ) {
                                         helper.unbindEvent(this[i], eventName ? eventName : null, handler ? handler : null);
+                                        output.push(this[i])
                                     } 
                                 }
                             }							
@@ -662,8 +663,27 @@
 
                         return output
                     },
-                    trigger: function() {
-                        return
+                    trigger: function(eventName) {
+                        var i = 0,
+                            j = 0,
+                            params = [],
+                            output = [];
+
+                        if ( this.length > 0 ) {
+                            if ( helper.stringNotBlank(eventName) ) {
+                                params = Array.prototype.slice.call(arguments, 1);
+                                for ( ; i < this.length ; i++ ) {
+                                    for ( j = 0 ; j < this[i][sDomQuery.uuid].length ; j++ ) {
+                                        if ( eventName === this[i][sDomQuery.uuid][j].eventName ) {
+                                            this[i][sDomQuery.uuid][j].handler.apply(this[i], params);
+                                            output.push(this[i])
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        return output
                     }
                 }
             }
@@ -718,11 +738,6 @@
                         left: l
                     }
                 },
-                bindEvent: function(ele, eventName, callback, capture) {
-                    if ( ele.addEventListener ) {
-                        ele.addEventListener(eventName, callback, "undefined" !== typeof capture ? capture : false);
-                    } 
-                },
                 unbindEvent: function(ele, eventName, callback, capture) {
                     var i = 0,
                         remove = [],
@@ -739,7 +754,7 @@
                                  || (!callback && eventName === eventObj[i].eventName)
                                  || (callback.guid === eventObj[i].guid && eventName === eventObj[i].eventName) ) {
 
-                                ele.removeEventListener(eventObj[i].eventName, eventObj[i].callback, eventObj[i].capture);
+                                ele.removeEventListener(eventObj[i].eventName, eventObj[i].handler, eventObj[i].capture);
                                 eventObj.splice(i,1);
                             } else {
                                 i++;
@@ -747,7 +762,7 @@
                         } while ( i < eventObj.length && eventObj.length )
                     }
                 },
-                handleEvent: function(that, eventName, helper, arguments) {
+                bindEvent: function(that, eventName, helper, arguments) {
                     var	output = [],
                         callback = null,
                         callbackStore = null,
@@ -770,34 +785,29 @@
                         }
 
                         for ( ; i < that.length ; i++ ) {
-                            if ( "undefined" === typeof that[i][sDomQuery.uuid]) {
-                                that[i][sDomQuery.uuid] = [];
-                            }							
+                            if ( that[i].addEventListener ) {
+                                if ( "undefined" === typeof that[i][sDomQuery.uuid]) {
+                                    that[i][sDomQuery.uuid] = [];
+                                }							
 
-                            callbackStore = callback;
-                            if ( null !== args ) {
-                                callbackStore = callbackStore.bind(that[i], args);
-                            } else {
-                                callbackStore = callbackStore.bind(that[i]);
+                                if ( null !== args ) {
+                                    callbackStore = callback.bind(that[i], args);
+                                } else {
+                                    callbackStore = callback.bind(that[i]);
+                                }
+
+                                that[i][sDomQuery.uuid].push({
+                                    guid: callback.guid,
+                                    eventName: eventName,
+                                    handler: callbackStore,
+                                    args: args,
+                                    capture: false
+                                });
+
+                                that[i].addEventListener(eventName, callbackStore, false);
+
+                                output.push(that[i])
                             }
-
-                            that[i][sDomQuery.uuid].push({
-                                guid: callback.guid,
-                                eventName: eventName,
-                                callback: callbackStore,
-                                args: args,
-                                capture: false
-                            });
-
-                            helper.bindEvent(
-                                that[i]
-                                , eventName
-                                , callbackStore
-                                , args
-                                , false
-                            );
-
-                            output.push(that[i])
                         }
                     }
 
