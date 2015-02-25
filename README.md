@@ -11,6 +11,10 @@ Just want a small enough library to query DOM for micro projects instead of incl
 2. Only have necessary core functions to access DOM (Traverse, query, apply CSS, DOM positioninig, and probably some DOM manipulation and events handling)
 3. It won't be a direct drop-in for jQuery (e.g. Zepto)
 
+## Release History
+
+* 2015-02-10 : Work in progress
+
 ## Special thanks 
 
 Inspired by the following links:
