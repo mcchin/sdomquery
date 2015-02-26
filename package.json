@@ -2,7 +2,10 @@
   "name": "sdomquery",
   "description": "a simple dom query",
   "version": "0.0.1",
-  "devDependencies": {},
+  "private": true,
+  "devDependencies": {
+    "webpack": "^1.6.0"
+  },
   "dependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-concat": "^0.5.1",
