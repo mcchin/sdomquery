@@ -307,7 +307,7 @@
                             }
                         }
 
-                        return helper.wrapper(output);
+                        return output;
                     },
                     has: function(domSelector) {
                         var output = [],
@@ -323,7 +323,7 @@
                                     }
                                 }
                             }
-                            return helper.wrapper(output);
+                            return output;
                         }
 
                         return;
@@ -356,7 +356,7 @@
                             }
                         }
 
-                        return helper.wrapper(output);
+                        return output;
                     },
                     parent: function(domSelector) {
                         var output = [],
@@ -387,17 +387,17 @@
                             }
                         }
 
-                        return helper.wrapper(output);
+                        return output;
                     },
                     first: function() {
                         if ( this.length ) {
-                            return helper.wrapper([this[0]]);
+                            return [this[0]];
                         }
                         return;
                     },
                     last: function() {
                         if ( this.length ) {
-                            return helper.wrapper([this[this.length - 1]]);
+                            return [this[this.length - 1]];
                         }						
                         return;
                     },
@@ -420,7 +420,7 @@
                             }
                         }
 
-                        return helper.wrapper(output);
+                        return output;
                     },
                     prev: function(domSelector) {
                         var output = [],
@@ -441,11 +441,11 @@
                             }
                         }
 
-                        return helper.wrapper(output);
+                        return output;
                     },
                     get: function(idx) {
                         if ( this.length && "undefined" !== this[idx] ) {
-                            return helper.wrapper([this[idx]]);
+                            return [this[idx]];
                         }
                         return;
                     }				
@@ -1054,7 +1054,7 @@
                 }
             }
 
-            $ = moduleList.selector.call(this, functionList, utilityList, helper);
+            $ = moduleList.selector.call(this, functionList, utilityList);
 
             var DOMReady = function() {
                 if ( "undefined" !== typeof document.removeEventListener ) {

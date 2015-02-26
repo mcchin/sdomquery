@@ -13,7 +13,7 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
-      files: ['src/*.js'],
+      files: ['src/**/*.js'],
       options: {
         globals: {
           DomQuery: true,
@@ -28,6 +28,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-browserify');
 
   grunt.registerTask('default', ['jshint', 'uglify']);
 
