@@ -1,15 +1,13 @@
-(function(sDomQuery) {
+(function(DomQuery) {
     var obj;
     obj = "undefined" !== typeof window ? window : "undefined" !== typeof global ? global : "undefined" !== typeof self && self; 
-    obj.sDomQuery = obj.$ = sDomQuery();
+    obj.DomQuery = obj.$ = DomQuery();
 } (function() {
-    var //domEventListener = "undefined" !== typeof document.addEventListener ? document.addEventListener : "undefined" !== typeof document.attachEvent ? document.attachEvent : null,
-        //removeDomEventListener = "undefined" !== typeof document.removeEventListener ? document.removeEventListener : "undefined" !== typeof document.detachEvent ? document.detachEvent : null,
-        isReady = false,
+    var isReady = false,
         readyCallback = null;
 
     return (function loadModule(moduleList, initFunction, extensions) {
-        return moduleList[initFunction].call(this, moduleList);
+        return moduleList[initFunction].call(this, moduleList, extensions);
     })({
         modules: {
             css: function(helper) {
@@ -64,14 +62,14 @@
                             i = 0;
 
                         if ( this.length > 0 ) {
-                            if ( 1 === arguments.length && "string" === typeof arguments[0] ) {
+                            if ( 1 === arguments.length && typeof arguments[0] === "string" ) {
                                 return this[0].style[helper.camelCase(arguments[0])];
                             } else if ( 1 === arguments.length && this.isArray(arguments[0]) ) {
                                 for ( ; i < arguments[0].length ; i++ ) {
                                     output[arguments[0][i]] = this[0].style[helper.camelCase(arguments[0][i])];
                                 }
                                 return output;
-                            } else if ( 1 === arguments.length && "object" === typeof arguments[0] ) {
+                            } else if ( 1 === arguments.length && typeof arguments[0] === "object" ) {
                                 for ( prop in arguments[0] ) {
                                     styles[helper.camelCase(prop)] = arguments[0][prop];
                                 }
@@ -79,9 +77,11 @@
                                 styles[helper.camelCase(arguments[0])] = arguments[1];
                             }
 
-                            for ( prop in styles ) {
-                                for ( i = 0 ; i < this.length ; i++ ) {
-                                    this[i].style[prop] = styles[prop];
+                            if ( !this.isEmpty(styles) ) {
+                                for ( prop in styles ) {
+                                    for ( i = 0 ; i < this.length ; i++ ) {
+                                        this[i].style[prop] = styles[prop];
+                                    }
                                 }
                             }
                         }
@@ -206,11 +206,11 @@
                                     // Need to find way to convert %, rem, em, and etc to px
                                     $(this[i]).css(coords);
                                     newTop = parseFloat($(this[i]).css('top')) || 0;
-                                    neWLeft = parseFloat($(this[i]).css('left')) || 0;
+                                    newLeft = parseFloat($(this[i]).css('left')) || 0;
 
                                     $(this[i]).css({
                                         top: (parseFloat(newTop - parentTop) || 0) + 'px', 
-                                        left: (parseFloat(neWLeft - parentLeft) || 0) + 'px'
+                                        left: (parseFloat(newLeft - parentLeft) || 0) + 'px'
                                     });
 
                                     output.push(this[i]);
@@ -482,19 +482,18 @@
                     },
                     attr: function() {
                         var attrs = {},
-                            attr = '',
                             output = {},
                             prop = null,
                             i = 0;
 
-                        if ( 1 === arguments.length && "string" === typeof arguments[0] ) {
+                        if ( 1 === arguments.length && typeof arguments[0] === "string" ) {
                             return this[0].getAttribute(arguments[0]);
                         } else if ( 1 === arguments.length && this.isArray(arguments[0]) ) {
                             for ( ; i < arguments[0].length ; i++ ) {
                                 output[arguments[0][i]] = this[0].getAttribute(arguments[0][i]);
                             }
                             return output;
-                        } else if ( 1 === arguments.length && "object" === typeof arguments[0] ) {
+                        } else if ( 1 === arguments.length && typeof arguments[0] === "object" ) {
                             for ( prop in arguments[0] ) {
                                 attrs[prop] = arguments[0][prop];
                             }
@@ -508,9 +507,11 @@
                             return output;
                         }
 
-                        for ( prop in attrs ) {
-                            for ( i = 0 ; i < this.length ; i++ ) {
-                                this[i].setAttribute(prop, attrs[prop]);
+                        if ( !this.isEmpty(attrs) ) {
+                            for ( prop in attrs ) {
+                                for ( i = 0 ; i < this.length ; i++ ) {
+                                    this[i].setAttribute(prop, attrs[prop]);
+                                }
                             }
                         }
 
@@ -521,7 +522,8 @@
             events: function(helper) {
                 return {
                     ready: function(callback) {
-                        if ( sDomQuery.isFunction(callback) ) {
+                        /* global DomQuery */
+                        if ( DomQuery.isFunction(callback) ) {
                             readyCallback = callback;
                             if ( isReady ) {
                                 callback.apply(this[0]);
@@ -587,56 +589,43 @@
                         return output;
                     },
                     keyup: function() {
-                        var output = helper.bindEvent(this, 'keyup', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'keyup', helper, arguments);
                     },
                     keydown: function() {
-                        var output = helper.bindEvent(this, 'keydown', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'keydown', helper, arguments);
                     },
                     keypress: function() {
-                        var output = helper.bindEvent(this, 'keypress', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'keypress', helper, arguments);
                     },
                     change: function() {
-                        var output = helper.bindEvent(this, 'change', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'change', helper, arguments);
                     },
                     blur: function() {
-                        var output = helper.bindEvent(this, 'blur', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'blur', helper, arguments);
                     },
                     focus: function() {
-                        var output = helper.bindEvent(this, 'focus', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'focus', helper, arguments);
                     },
                     focusin: function() {
-                        var output = helper.bindEvent(this, 'focusin', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'focusin', helper, arguments);
                     },
                     focusout: function() {
-                        var output = helper.bindEvent(this, 'focusout', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'focusout', helper, arguments);
                     },
                     unload: function() {
-                        var output = helper.bindEvent(this, 'unload', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'unload', helper, arguments);
                     },
                     select: function() {
-                        var output = helper.bindEvent(this, 'select', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'select', helper, arguments);
                     },
                     submit: function() {
-                        var output = helper.bindEvent(this, 'submit', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'submit', helper, arguments);
                     },
                     scroll: function() {
-                        var output = helper.bindEvent(this, 'scroll', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'scroll', helper, arguments);
                     },
                     resize: function() {
-                        var output = helper.bindEvent(this, 'resize', helper, arguments);
-                        return;
+                        return helper.bindEvent(this, 'resize', helper, arguments);
                     },
                     off: function() {
                         // 0 - event, 1 - selector, 2 - handler
@@ -674,6 +663,7 @@
                         return output;
                     },
                     trigger: function(eventName) {
+                        /* global DomQuery */
                         var i = 0,
                             j = 0,
                             params = [],
@@ -683,9 +673,9 @@
                             if ( helper.stringNotBlank(eventName) ) {
                                 params = Array.prototype.slice.call(arguments, 1);
                                 for ( ; i < this.length ; i++ ) {
-                                    for ( j = 0 ; j < this[i][sDomQuery.uuid].length ; j++ ) {
-                                        if ( eventName === this[i][sDomQuery.uuid][j].eventName ) {
-                                            this[i][sDomQuery.uuid][j].handler.apply(this[i], params);
+                                    for ( j = 0 ; j < this[i][DomQuery.uuid].length ; j++ ) {
+                                        if ( eventName === this[i][DomQuery.uuid][j].eventName ) {
+                                            this[i][DomQuery.uuid][j].handler.apply(this[i], params);
                                             output.push(this[i]);
                                         }
                                     }
@@ -724,7 +714,8 @@
                     list.push(item);
                 },
                 wrapper: function(newObjects) {
-                    return new sDomQuery(newObjects);
+                    /* global DomQuery */
+                    return new DomQuery(newObjects);
                 },
                 getStyles: function(obj) {
                     if ( "undefined" !== window.getComputedStyle ) {
@@ -749,15 +740,15 @@
                         left: l
                     };
                 },
-                unbindEvent: function(ele, eventName, callback, capture) {
+                unbindEvent: function(ele, eventName, callback) {
+                    /* global DomQuery */
                     var i = 0,
-                        remove = [],
                         eventObj = null;
 
-                    if ( "undefined" !== typeof ele[sDomQuery.uuid] && 
+                    if ( "undefined" !== typeof ele[DomQuery.uuid] && 
                          "undefined" !== typeof ele.removeEventListener ) {
                         
-                        eventObj = ele[sDomQuery.uuid];
+                        eventObj = ele[DomQuery.uuid];
 
                         do {
                             if ( !callback || 
@@ -774,6 +765,7 @@
                     }
                 },
                 bindEvent: function(that, eventName, helper, argsEvent) {
+                    /* global DomQuery */
                     var	output = [],
                         callback = null,
                         callbackStore = null,
@@ -792,13 +784,13 @@
                          that.isFunction(callback) ) {
 
                         if ( "undefined" === typeof callback.guid ) {
-                            callback.guid = ++sDomQuery.guid;
+                            callback.guid = ++DomQuery.guid;
                         }
 
                         for ( ; i < that.length ; i++ ) {
                             if ( that[i].addEventListener ) {
-                                if ( "undefined" === typeof that[i][sDomQuery.uuid]) {
-                                    that[i][sDomQuery.uuid] = [];
+                                if ( "undefined" === typeof that[i][DomQuery.uuid]) {
+                                    that[i][DomQuery.uuid] = [];
                                 }							
 
                                 if ( null !== args ) {
@@ -807,7 +799,7 @@
                                     callbackStore = callback.bind(that[i]);
                                 }
 
-                                that[i][sDomQuery.uuid].push({
+                                that[i][DomQuery.uuid].push({
                                     guid: callback.guid,
                                     eventName: eventName,
                                     handler: callbackStore,
@@ -941,6 +933,16 @@
                     // Check if variable is a {}
                     return "object" === typeof obj && "Object" === obj.constructor.name;
                 },
+                isEmpty: function(obj) {
+                    var _key;
+
+                    if ( 0 < obj.length ) return false;
+                    if ( 0 === obj.length ) return true;
+                    for ( _key in obj ) {
+                        if ( Object.prototype.hasOwnProperty.call(obj, _key) ) return false;
+                    }
+                    return true;
+                },
                 // Source: [http://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser]
                 // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
                 isOpera: !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0,
@@ -956,12 +958,12 @@
                 isOldIE: navigator.userAgent.match(/MSIE\s(?!9.0)/) ? true : false
             };
         },  
-        selector: function(functionList, utilityList, helper) {
+        selector: function(functionList, utilityList) {
             var runOnce = false;
 
             if ( !runOnce ) {
                 // Attach uniq ID
-                wrapper.uuid = 'sDomQuery' + String(Math.random()).substring(2) + Date.now();
+                wrapper.uuid = 'DomQuery' + String(Math.random()).substring(2) + Date.now();
                 wrapper.guid = 0;
 
                 // Attach utils and other functions to the core
@@ -971,10 +973,10 @@
             }
 
             function sDomQuery(domSelector) {
-                var foundObjects = [],
-                    regExpHtml = /^$/,
-                    regExpID = /^$/,
-                    regExpClass = /^$/;
+                var foundObjects = [];
+                    //regExpHtml = /^$/,
+                    //regExpID = /^$/,
+                    //regExpClass = /^$/;
 
                 // Depending on regExp
                 // if html append and pass back
@@ -1002,6 +1004,7 @@
             }      
             
             function wrapper(domSelector) {
+                /* global DomQuery */
                 return new sDomQuery(domSelector);
             }          
 
@@ -1044,7 +1047,7 @@
 
             $ = moduleList.selector.call(this, functionList, utilityList, helper);
 
-            DOMReady = function() {
+            var DOMReady = function() {
                 if ( "undefined" !== typeof document.removeEventListener ) {
                     document.removeEventListener("DOMContentLoaded", DOMReady, false);
                 } 

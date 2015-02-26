@@ -16,7 +16,7 @@ module.exports = function(grunt) {
       files: ['sdomquery.js'],
       options: {
         globals: {
-          jQuery: true,
+          DomQuery: true,
           console: true,
           module: true,
           document: true
