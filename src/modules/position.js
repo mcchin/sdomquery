@@ -3,24 +3,38 @@
 
     var helper = require('./helper.js');
 
+    function getOuterDimension(styles) {
+        var outerHeight = 0,
+            outerWidth = 0;
+
+        if ( styles ) {
+            outerHeight = parseFloat(styles.height) +
+                          parseFloat(styles.paddingTop) +
+                          parseFloat(styles.paddingBottom) +
+                          parseFloat(styles.borderTopWidth) +
+                          parseFloat(styles.borderBottomWidth);
+
+            outerWidth = parseFloat(styles.width) +
+                         parseFloat(styles.paddingLeft) +
+                         parseFloat(styles.paddingRight) +
+                         parseFloat(styles.borderLeftWidth) +
+                         parseFloat(styles.borderRightWidth);  
+        }
+
+        return { outerHeight: outerHeight, outerWidth: outerWidth };
+    }
+
     function Position() {
         this.height = function() {
-            var styles = null;
-
             if ( this.length > 0 ) {
-                styles = helper.getStyles(this[0]);
-
-                return parseFloat(styles.height);
+                return parseFloat(helper.getStyles(this[0]).height) || 0;
             }
 
             return;
         };
         this.width = function() {
-            var styles = null;
-
             if ( this.length > 0 ) {
-                styles = helper.getStyles(this[0]);
-                return parseFloat(styles.width);
+                return parseFloat(helper.getStyles(this[0]).width) || 0;
             }
 
             return;
@@ -40,41 +54,27 @@
             return;
         };
         this.outerHeight = function() {
-            var styles = null;
-
             if ( this.length > 0 ) {
-                styles = helper.getStyles(this[0]);
-
-                return parseFloat(styles.height) +
-                       parseFloat(styles.paddingTop) +
-                       parseFloat(styles.paddingBottom) +
-                       parseFloat(styles.borderTopWidth) +
-                       parseFloat(styles.borderBottomWidth);
+                return getOuterDimension(helper.getStyles(this[0])).outerHeight;
             }
 
             return;
         };
         this.outerWidth = function() {
-            var styles = null;
-
             if ( this.length > 0 ) {
-                styles = helper.getStyles(this[0]);
-
-                return parseFloat(styles.width) +
-                       parseFloat(styles.paddingLeft) +
-                       parseFloat(styles.paddingRight) +
-                       parseFloat(styles.borderLeftWidth) +
-                       parseFloat(styles.borderRightWidth);
+                return getOuterDimension(helper.getStyles(this[0])).outerWidth;
             }
 
             return;
         };
         this.offset = function(coords) {
             var output = [],
-                parentLeft = 0,
-                parentTop = 0,
-                newLeft = 0,
-                newTop = 0,
+                dim = {
+                    parentLeft: 0,
+                    parentTop: 0,
+                    newLeft: 0,
+                    newTop: 0,
+                },
                 obj = null,						
                 i = 0;
 
@@ -85,8 +85,8 @@
 
                 if ( this.isPlainObject(coords) ) {
                     for ( ; i < this.length ; i++ ) {
-                        parentLeft = 0;
-                        parentTop = 0;
+                        dim.parentLeft = 0;
+                        dim.parentTop = 0;
 
                         if ( 'absolute' !== $(this[i]).css('position') && 
                              'fixed' !== $(this[i]).css('position') ) {
@@ -100,8 +100,8 @@
                              'fixed' !== $(this[i]).css('position') ) {
                             obj = this[i];
                             do { 
-                                parentTop += obj.offsetTop - (parseFloat(obj.style.top) || 0);
-                                parentLeft += obj.offsetLeft - (parseFloat(obj.style.left) || 0);
+                                dim.parentTop += obj.offsetTop - (parseFloat(obj.style.top) || 0);
+                                dim.parentLeft += obj.offsetLeft - (parseFloat(obj.style.left) || 0);
                                 obj = obj.offsetParent;
                             } while ( obj );
                         }
@@ -110,12 +110,12 @@
 
                         // Need to find way to convert %, rem, em, and etc to px
                         $(this[i]).css(coords);
-                        newTop = parseFloat($(this[i]).css('top')) || 0;
-                        newLeft = parseFloat($(this[i]).css('left')) || 0;
+                        dim.newTop = parseFloat($(this[i]).css('top')) || 0;
+                        dim.newLeft = parseFloat($(this[i]).css('left')) || 0;
 
                         $(this[i]).css({
-                            top: (parseFloat(newTop - parentTop) || 0) + 'px', 
-                            left: (parseFloat(newLeft - parentLeft) || 0) + 'px'
+                            top: (parseFloat(dim.newTop - dim.parentTop) || 0) + 'px', 
+                            left: (parseFloat(dim.newLeft - dim.parentLeft) || 0) + 'px'
                         });
 
                         output.push(this[i]);
