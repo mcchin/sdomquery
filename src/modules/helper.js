@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    /* global window, global, self, navigator */
+    /* global window */
 
     function Helper() {
         this.matchString = function(haystack, needle) {

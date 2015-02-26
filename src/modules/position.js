@@ -1,8 +1,6 @@
 (function () {
     "use strict";
 
-    /* global window, global, self, navigator */
-
     var helper = require('./helper.js');
 
     function Position() {

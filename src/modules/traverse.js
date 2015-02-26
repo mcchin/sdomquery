@@ -1,9 +1,37 @@
 (function () {
     "use strict";
 
-    /* global window, global, self, navigator */
-
     var helper = require('./helper.js');
+
+    function traverseSibling(that, direction) {
+        var output = [],
+            sibling = null,
+            i = 0;
+
+        for( ; i < that.length ; i++ ) {
+            if ( direction ) {
+                sibling = that[i].nextSibling;
+            } else {
+                sibling = that[i].previousSibling;
+            }
+
+            while ( null !== nextSibling ) {
+                if ( sibling.nodeType === 1 ) {
+                    if ( !domSelector || 
+                         (helper.stringNotBlank(domSelector) && helper.matchesSelector(sibling, domSelector)) ) {
+                        helper.pushUniq(output, sibling);
+                    }
+                }
+                if ( direction ) {
+                    sibling = sibling.nextSibling;
+                } else {
+                    sibling = sibling.previousSibling;
+                }                
+            }
+        }
+
+        return output;        
+    }
 
     function Traverse() {
         this.find = function(domSelector) {
@@ -120,46 +148,10 @@
             return;
         };
         this.next = function(domSelector) {
-            var output = [],
-                nextSibling = null,
-                i = 0;
-
-            for( ; i < this.length ; i++ ) {
-                nextSibling = this[i].nextSibling;
-
-                while ( null !== nextSibling ) {
-                    if ( nextSibling.nodeType === 1 ) {
-                        if ( !domSelector || 
-                             (helper.stringNotBlank(domSelector) && helper.matchesSelector(nextSibling, domSelector)) ) {
-                            helper.pushUniq(output, nextSibling);
-                        }
-                    }
-                    nextSibling = nextSibling.nextSibling;
-                }
-            }
-
-            return output;
+            return traverseSibling(this, true);
         };
         this.prev = function(domSelector) {
-            var output = [],
-                prevSibling = null,
-                i = 0;
-
-            for( ; i < this.length ; i++ ) {
-                prevSibling = this[i].previousSibling;
-
-                while ( null !== prevSibling ) {
-                    if ( prevSibling.nodeType === 1 ) {
-                        if ( !domSelector || 
-                             (helper.stringNotBlank(domSelector) && helper.matchesSelector(prevSibling, domSelector)) ) {									
-                            helper.pushUniq(output, prevSibling);
-                        }
-                    }
-                    prevSibling = prevSibling.previousSibling;
-                }
-            }
-
-            return output;
+            return traverseSibling(this, false);
         };
         this.get = function(idx) {
             if ( this.length && "undefined" !== this[idx] ) {

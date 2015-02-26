@@ -1,7 +1,6 @@
 (function () {
     "use strict";
 
-    /* global window, global, self, navigator */
     var isReady = false,
         readyCallback = null;
 

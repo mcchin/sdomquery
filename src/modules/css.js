@@ -1,8 +1,6 @@
 (function () {
     "use strict";
 
-    /* global window, global, self, navigator */
-
     var helper = require('./helper.js');
 
     function Css() {
@@ -41,9 +39,7 @@
             return output;
         };
         this.hasClass = function(className) {
-            var output = [],
-                i = 0;
-
+            var i = 0;
 
             if ( helper.stringNotBlank(className) ) {
                 for ( ; i < this.length ; i++ ) {
