@@ -496,8 +496,10 @@
                             }
                             return output;
                         } else if ( 1 === arguments.length && typeof arguments[0] === "object" ) {
-                            for ( prop in arguments[0] ) {
-                                attrs[prop] = arguments[0][prop];
+                            if ( !this.isEmpty(arguments[0]) ) {
+                                for ( prop in arguments[0] ) {
+                                    attrs[prop] = arguments[0][prop];
+                                }
                             }
                         } else if ( 2 === arguments.length ) {
                             attrs[arguments[0]] = arguments[1];
@@ -819,14 +821,18 @@
                     return output;
                 },
                 matchesSelector: function( ele, domSelector ) {
-                    if ("function" === typeof ele.oMatchesSelector) 
+                    if ("function" === typeof ele.oMatchesSelector) {
                         return ele.oMatchesSelector(domSelector);
-                    else if ("function" === typeof ele.msMatchesSelector)
+                    }
+                    else if ("function" === typeof ele.msMatchesSelector) {
                         return ele.msMatchesSelector(domSelector);
-                    else if ("function" === typeof ele.webkitMatchesSelector)
+                    }
+                    else if ("function" === typeof ele.webkitMatchesSelector) {
                         return ele.webkitMatchesSelector(domSelector);
-                    else if ("function" === typeof ele.mozMatchesSelector)
+                    }
+                    else if ("function" === typeof ele.mozMatchesSelector) {
                         return ele.mozMatchesSelector(domSelector);
+                    }
                     else {
                         var matches = (ele.document || ele.ownerDocument).querySelectorAll(domSelector);
                         var i = 0;
@@ -867,21 +873,23 @@
                     return elements;
                 },
                 extend: function (mergeTarget) {
-                  var otherObjects = [],
-                      _key = null,
-                      objProp = null;
+                    var otherObjects = [],
+                          _key = null,
+                          objProp = null;
 
-                  for (_key = 1; _key < arguments.length; _key++) {
-                    otherObjects[_key - 1] = arguments[_key];
-                  }
-
-                  for (_key = 0; _key < otherObjects.length; _key++) {
-                    for (objProp in otherObjects[_key]) {
-                      mergeTarget[objProp] = otherObjects[_key][objProp];
+                    for (_key = 1; _key < arguments.length; _key++) {
+                        otherObjects[_key - 1] = arguments[_key];
                     }
-                  }
 
-                  return mergeTarget;
+                    for (_key = 0; _key < otherObjects.length; _key++) {
+                        if ( !this.isEmpty(otherObjects[_key]) ) {
+                            for (objProp in otherObjects[_key]) {
+                                mergeTarget[objProp] = otherObjects[_key][objProp];
+                            }
+                        }
+                    }
+
+                    return mergeTarget;
                 },
                 append: function(html) {
                     var i = 0,
@@ -938,10 +946,12 @@
                 isEmpty: function(obj) {
                     var _key;
 
-                    if ( 0 < obj.length ) return false;
-                    if ( 0 === obj.length ) return true;
+                    if ( 0 < obj.length ) { return false; }
+                    if ( 0 === obj.length ) { return true; }
                     for ( _key in obj ) {
-                        if ( Object.prototype.hasOwnProperty.call(obj, _key) ) return false;
+                        if ( Object.prototype.hasOwnProperty.call(obj, _key) ) {
+                            return false;
+                        }
                     }
                     return true;
                 },
@@ -970,7 +980,7 @@
 
                 // Attach utils and other functions to the core
                 utilityList.extend(wrapper, utilityList);
-                utilityList.extend(sDomQuery.prototype, functionList, utilityList);
+                utilityList.extend(DomQueryWrapper.prototype, functionList, utilityList);
                 runOnce = true;
             }
 
