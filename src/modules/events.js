@@ -7,7 +7,7 @@
 
     var helper = require('./helper.js');
 
-    var events = new function() {
+    function Events() {
         this.ready = function(callback) {
             /* global DomQuery, readyCallback, isReady */
             if ( DomQuery.isFunction(callback) ) {
@@ -77,7 +77,7 @@
         };
         this.keyup = function() {
             return helper.bindEvent(this, 'keyup', helper, arguments);
-        },
+        };
         this.keydown = function() {
             return helper.bindEvent(this, 'keydown', helper, arguments);
         };
@@ -171,7 +171,7 @@
             }
             return output;
         };
-    };
+    }
 
     var DOMReady = function() {
         if ( "undefined" !== typeof document.removeEventListener ) {
@@ -189,5 +189,5 @@
         document.addEventListener("DOMContentLoaded", DOMReady, false);
     }
 
-    module.exports = events;
+    module.exports = new Events();
 }());

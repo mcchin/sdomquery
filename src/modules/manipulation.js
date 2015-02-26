@@ -5,7 +5,7 @@
 
     var helper = require('./helper.js');
 
-    var manipulation = new function() {
+    function Manipulation() {
         this.remove = function(domSelector) {
             var i = 0;
 
@@ -67,7 +67,7 @@
 
             return this;
         };
-    };
+    }
 
-    module.exports = manipulation;
+    module.exports = new Manipulation();
 }());

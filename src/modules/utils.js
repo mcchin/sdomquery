@@ -5,7 +5,7 @@
 
     var helper = require('./helper.js');
 
-    var utils = new function() {
+    function Utils() {
         this.each = function () {
             var elements = null,
                 callback = function() {};
@@ -122,7 +122,7 @@
         this.isIE = /*@cc_on!@*/false || !!document.documentMode;
         // IE8 and below
         this.isOldIE = navigator.userAgent.match(/MSIE\s(?!9.0)/) ? true : false;
-    };
+    }
 
-    module.exports = utils;
+    module.exports = new Utils();
 }());

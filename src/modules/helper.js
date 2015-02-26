@@ -3,7 +3,7 @@
 
     /* global window, global, self, navigator */
 
-    var helper = new function() {
+    function Helper() {
         this.matchString = function(haystack, needle) {
             return null !== haystack.match(new RegExp('(\\s|^)'+needle+'(\\s|$)'));
         };
@@ -155,7 +155,7 @@
             }
             return false;
         };
-    };
+    }
 
-    module.exports = helper;
+    module.exports = new Helper();
 })();

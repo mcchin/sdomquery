@@ -5,7 +5,7 @@
 
     var helper = require('./helper.js');
 
-    var position = new function() {
+    function Position() {
         this.height = function() {
             var styles = null;
 
@@ -191,7 +191,7 @@
             }	
             return;
         };
-    };
+    }
 
-    module.exports = position;
+    module.exports = new Position();
 }());	

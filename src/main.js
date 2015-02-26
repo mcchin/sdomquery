@@ -12,7 +12,7 @@
         traverse = require('./modules/traverse.js'),
         manipulation = require('./modules/manipulation.js'),
         events = require('./modules/events.js');
-    console.log(utils);
+    
     if ( !runOnce ) {
         // Attach uniq ID - This is to keep reference to bind / unbind events
         wrapper.uuid = 'DomQuery' + String(Math.random()).substring(2) + Date.now();

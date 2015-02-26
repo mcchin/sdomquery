@@ -5,7 +5,7 @@
 
     var helper = require('./helper.js');
 
-    var traverse = new function() {
+    function Traverse() {
         this.find = function(domSelector) {
             var output = [],
                 i = 0,
@@ -167,7 +167,7 @@
             }
             return;
         };
-    };
+    }
 
-    module.exports = traverse;
+    module.exports = new Traverse();
 }());

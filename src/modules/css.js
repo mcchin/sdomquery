@@ -5,7 +5,7 @@
 
     var helper = require('./helper.js');
 
-    var css = new function() {
+    function Css() {
         this.addClass = function(className) {
             var output = [],
                 i = 0;
@@ -96,7 +96,7 @@
 
             return;
         };
-    };
+    }
 
-    module.exports = css;
+    module.exports = new Css();
 }());
