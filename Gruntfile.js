@@ -8,12 +8,12 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/<%= pkg.name %>.min.js': ['sdomquery.js']
+          'dist/<%= pkg.name %>.min.js': ['src/sdomquery.js']
         }
       }
     },
     jshint: {
-      files: ['sdomquery.js'],
+      files: ['src/*.js'],
       options: {
         globals: {
           DomQuery: true,
