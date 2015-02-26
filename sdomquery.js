@@ -1,4 +1,5 @@
 (function(DomQuery) {
+    /* global window, global, self */
     var obj;
     obj = typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" && self; 
     obj.DomQuery = obj.$ = new DomQuery();
@@ -62,28 +63,24 @@
                             i = 0;
 
                         if ( this.length > 0 ) {
-                            if ( 1 === arguments.length && typeof arguments[0] === "string" ) {
+                            if ( arguments.length === 1 && typeof arguments[0] === "string" ) {
                                 return this[0].style[helper.camelCase(arguments[0])];
-                            } else if ( 1 === arguments.length && this.isArray(arguments[0]) ) {
+                            } else if ( arguments.length === 1 && this.isArray(arguments[0]) ) {
                                 for ( ; i < arguments[0].length ; i++ ) {
                                     output[arguments[0][i]] = this[0].style[helper.camelCase(arguments[0][i])];
                                 }
                                 return output;
-                            } else if ( 1 === arguments.length && typeof arguments[0] === "object" ) {
-                                if ( !this.isEmpty(arguments[0]) ) {
-                                    for ( prop in arguments[0] ) {
-                                        styles[helper.camelCase(prop)] = arguments[0][prop];
-                                    }
+                            } else if ( arguments.length === 1 && typeof arguments[0] === "object" ) {
+                                for ( prop in arguments[0] ) {
+                                    styles[helper.camelCase(prop)] = arguments[0][prop];
                                 }
-                            } else if ( 2 === arguments.length ) {
+                            } else if ( arguments.length === 2 ) {
                                 styles[helper.camelCase(arguments[0])] = arguments[1];
                             }
 
-                            if ( !this.isEmpty(styles) ) {
-                                for ( prop in styles ) {
-                                    for ( i = 0 ; i < this.length ; i++ ) {
-                                        this[i].style[prop] = styles[prop];
-                                    }
+                            for ( prop in styles ) {
+                                for ( i = 0 ; i < this.length ; i++ ) {
+                                    this[i].style[prop] = styles[prop];
                                 }
                             }
                         }
@@ -351,7 +348,7 @@
                                     } 									
                                 } else {							
                                     for ( child in this[i].childNodes ) {
-                                        if ( 1 === this[i].childNodes[child].nodeType ) {
+                                        if ( this[i].childNodes[child].nodeType === 1) {
                                             output.push(this[i].childNodes[child]);
                                         }
                                     }
@@ -373,7 +370,7 @@
                             if ( helper.stringNotBlank(domSelector) ) {
                                 parent = this[i].parentNode;
                                 if ( "undefined" !== parent.parentNode && 
-                                     1 === parent.parentNode.nodeType ) {
+                                     parent.parentNode.nodeType === 1 ) {
                                     child = parent.parentNode.querySelectorAll(domSelector);
                                     if ( child.length ) {
                                         for( j = 0 ; j < child.length ; j++ ) {
@@ -413,7 +410,7 @@
                             nextSibling = this[i].nextSibling;
 
                             while ( null !== nextSibling ) {
-                                if ( 1 === nextSibling.nodeType ) {
+                                if ( nextSibling.nodeType === 1 ) {
                                     if ( !domSelector || 
                                          (helper.stringNotBlank(domSelector) && helper.matchesSelector(nextSibling, domSelector)) ) {
                                         helper.pushUniq(output, nextSibling);
@@ -434,7 +431,7 @@
                             prevSibling = this[i].previousSibling;
 
                             while ( null !== prevSibling ) {
-                                if ( 1 === prevSibling.nodeType ) {
+                                if ( prevSibling.nodeType === 1 ) {
                                     if ( !domSelector || 
                                          (helper.stringNotBlank(domSelector) && helper.matchesSelector(prevSibling, domSelector)) ) {									
                                         helper.pushUniq(output, prevSibling);
@@ -488,20 +485,18 @@
                             prop = null,
                             i = 0;
 
-                        if ( 1 === arguments.length && typeof arguments[0] === "string" ) {
+                        if ( arguments.length === 1 && typeof arguments[0] === "string" ) {
                             return this[0].getAttribute(arguments[0]);
-                        } else if ( 1 === arguments.length && this.isArray(arguments[0]) ) {
+                        } else if ( arguments.length === 1 && this.isArray(arguments[0]) ) {
                             for ( ; i < arguments[0].length ; i++ ) {
                                 output[arguments[0][i]] = this[0].getAttribute(arguments[0][i]);
                             }
                             return output;
-                        } else if ( 1 === arguments.length && typeof arguments[0] === "object" ) {
-                            if ( !this.isEmpty(arguments[0]) ) {
-                                for ( prop in arguments[0] ) {
-                                    attrs[prop] = arguments[0][prop];
-                                }
+                        } else if ( arguments.length === 1 && typeof arguments[0] === "object" ) {
+                            for ( prop in arguments[0] ) {
+                                attrs[prop] = arguments[0][prop];
                             }
-                        } else if ( 2 === arguments.length ) {
+                        } else if ( arguments.length === 2 ) {
                             attrs[arguments[0]] = arguments[1];
                         } else {
                             // Return all attributes
@@ -511,11 +506,9 @@
                             return output;
                         }
 
-                        if ( !this.isEmpty(attrs) ) {
-                            for ( prop in attrs ) {
-                                for ( i = 0 ; i < this.length ; i++ ) {
-                                    this[i].setAttribute(prop, attrs[prop]);
-                                }
+                        for ( prop in attrs ) {
+                            for ( i = 0 ; i < this.length ; i++ ) {
+                                this[i].setAttribute(prop, attrs[prop]);
                             }
                         }
 
@@ -577,10 +570,10 @@
                             callbackIn = null,
                             callbackOut = null;
 
-                        if ( 2 === arguments.length ) {
+                        if ( arguments.length === 2) {
                             callbackIn = arguments[0];
                             callbackOut = arguments[1];
-                        } else if ( 1 === arguments.length ) {
+                        } else if ( arguments.length === 1 ) {
                             callbackIn = arguments[0];
                             callbackOut = arguments[0];
                         }
@@ -640,15 +633,15 @@
                             output = [];
 
                         if ( this.length > 0 ) {
-                            if ( 3 === arguments.length && 
+                            if ( arguments.length === 3 && 
                                  "function" === typeof arguments[2]) {
                                 eventName = arguments[0];
                                 domSelector = arguments[1];
                                 handler = arguments[2];
-                            } else if ( 2 === arguments.length ) {
+                            } else if ( arguments.length === 2 ) {
                                 eventName = arguments[0];
                                 domSelector = arguments[1];
-                            } else if ( 1 === arguments.length ) {
+                            } else if ( arguments.length === 1 ) {
                                 eventName = arguments[0];
                             } 
 
@@ -776,10 +769,10 @@
                         args = null,
                         i = 0;
 
-                    if ( 2 === argsEvent.length ) {
+                    if ( argsEvent.length === 2 ) {
                         argsEvent = argsEvent[0];
                         callback = argsEvent[1];
-                    } else if ( 1 === argsEvent.length ) {
+                    } else if ( argsEvent.length === 1 ) {
                         callback = argsEvent[0];
                     }
 
@@ -882,10 +875,8 @@
                     }
 
                     for (_key = 0; _key < otherObjects.length; _key++) {
-                        if ( !this.isEmpty(otherObjects[_key]) ) {
-                            for (objProp in otherObjects[_key]) {
-                                mergeTarget[objProp] = otherObjects[_key][objProp];
-                            }
+                        for (objProp in otherObjects[_key]) {
+                            mergeTarget[objProp] = otherObjects[_key][objProp];
                         }
                     }
 
@@ -931,7 +922,7 @@
                     return output;
                 },
                 isNumeric: function(obj) {
-                    return 0 === (obj - parseFloat(obj));
+                    return (obj - parseFloat(obj)) === 0;
                 },
                 isFunction: function(obj) {
                     return "function" === typeof obj;
@@ -946,8 +937,8 @@
                 isEmpty: function(obj) {
                     var _key;
 
-                    if ( 0 < obj.length ) { return false; }
-                    if ( 0 === obj.length ) { return true; }
+                    if ( obj.length > 0 ) { return false; }
+                    if ( obj.length === 0 ) { return true; }
                     for ( _key in obj ) {
                         if ( Object.prototype.hasOwnProperty.call(obj, _key) ) {
                             return false;
