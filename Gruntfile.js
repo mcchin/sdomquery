@@ -8,7 +8,17 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/<%= pkg.name %>.min.js': ['src/sdomquery.js']
+          'dist/<%= pkg.name %>.min.js': ['dist/sdomquery.js']
+        }
+      }
+    },
+    browserify: {
+      dist: {
+        files: {
+          'dist/sdomquery.js': ['src/main.js'],
+        },
+        options: {
+          debug: true
         }
       }
     },
@@ -30,6 +40,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-browserify');
 
-  grunt.registerTask('default', ['jshint', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'browserify', 'uglify']);
 
 };
