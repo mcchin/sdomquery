@@ -5,6 +5,9 @@
 /____/_/_/ /_/ /_/ .___/_/\___/  /_____/\____/_/  /_/   \___\_\__,_/\___/_/   \__, /  
                 /_/                                                          /____/   </pre>
 
+
+[![Build Status](https://travis-ci.org/mcchin/sdomquery.svg?branch=master)](https://travis-ci.org/mcchin/sdomquery)
+
 Just want a small enough library to query DOM for micro projects instead of including the entire jQuery.
 
 1. Imitating jQuery function, so that is easier for people who already familiar with jQuery.
