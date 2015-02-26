@@ -24,6 +24,28 @@
         return { outerHeight: outerHeight, outerWidth: outerWidth };
     }
 
+    function getScrollDimension(that, px, direction) {
+        if ( px ) {
+            if ( $.isNumeric(px) ) {
+                if ( direction ) {
+                    that.scrollTop = parseFloat(px) || 0;    
+                }   else {
+                    that.scrollLeft = parseFloat(px) || 0;    
+                }
+            }
+            return [that];
+        } else {
+            return (direction ? parseFloat(that.scrollTop) : parseFloat(that.scrollLeft)) || 0;
+        }        
+    }
+
+    function setRelative(that) {
+        if ( 'absolute' !== $(that).css('position') && 
+             'fixed' !== $(that).css('position') ) {
+            $(that).css('position', 'relative');
+        }        
+    }
+
     function Position() {
         this.height = function() {
             if ( this.length > 0 ) {
@@ -88,11 +110,8 @@
                         dim.parentLeft = 0;
                         dim.parentTop = 0;
 
-                        if ( 'absolute' !== $(this[i]).css('position') && 
-                             'fixed' !== $(this[i]).css('position') ) {
-                            $(this[i]).css('position', 'relative');
-                        }
-
+                        setRelative(this[i]);
+                        
                         coords.top = this.isNumeric(coords.top) ? coords.top + 'px' : coords.top;
                         coords.left = this.isNumeric(coords.left) ? coords.left + 'px' : coords.left;
 
@@ -140,11 +159,8 @@
 
                 if ( this.isPlainObject(coords) ) {
                     for ( ; i < this.length ; i++ ) {
-                        if ( 'absolute' !== $(this[i]).css('position') && 
-                             'fixed' !== $(this[i]).css('position') ) {
-                            $(this[i]).css('position', 'relative');
-                        }
-
+                        setRelative(this[i]);
+                        
                         coords.top = this.isNumeric(coords.top) ? coords.top + 'px' : coords.top;
                         coords.left = this.isNumeric(coords.left) ? coords.left + 'px' : coords.left;
 
@@ -165,27 +181,13 @@
         };
         this.scrollTop = function(top) {
             if ( this.length > 0 ) {
-                if ( top ) {
-                    if ( this.isNumeric(top) ) {
-                        this[0].scrollTop = parseFloat(top) || 0;
-                    }
-                    return [this[0]];
-                } else {
-                    return parseFloat(this[0].scrollTop) || 0;
-                }
+                return getScrollDimension(this[0], top, true);
             }	
             return;
         };
         this.scrollLeft = function(left) {
             if ( this.length > 0 ) {
-                if ( left ) {
-                    if ( this.isNumeric(left) ) {
-                        this[0].scrollLeft = parseFloat(left) || 0;
-                    }
-                    return [this[0]];
-                } else {
-                    return parseFloat(this[0].scrollLeft) || 0;	
-                }							
+                return getScrollDimension(this[0], left, false);
             }	
             return;
         };
