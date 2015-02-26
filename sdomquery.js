@@ -1,7 +1,7 @@
 (function(DomQuery) {
     var obj;
-    obj = "undefined" !== typeof window ? window : "undefined" !== typeof global ? global : "undefined" !== typeof self && self; 
-    obj.DomQuery = obj.$ = DomQuery();
+    obj = typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" && self; 
+    obj.DomQuery = obj.$ = new DomQuery();
 } (function() {
     var isReady = false,
         readyCallback = null;
@@ -70,8 +70,10 @@
                                 }
                                 return output;
                             } else if ( 1 === arguments.length && typeof arguments[0] === "object" ) {
-                                for ( prop in arguments[0] ) {
-                                    styles[helper.camelCase(prop)] = arguments[0][prop];
+                                if ( !this.isEmpty(arguments[0]) ) {
+                                    for ( prop in arguments[0] ) {
+                                        styles[helper.camelCase(prop)] = arguments[0][prop];
+                                    }
                                 }
                             } else if ( 2 === arguments.length ) {
                                 styles[helper.camelCase(arguments[0])] = arguments[1];
@@ -972,7 +974,7 @@
                 runOnce = true;
             }
 
-            function sDomQuery(domSelector) {
+            function DomQueryWrapper(domSelector) {
                 var foundObjects = [];
                     //regExpHtml = /^$/,
                     //regExpID = /^$/,
@@ -1005,7 +1007,7 @@
             
             function wrapper(domSelector) {
                 /* global DomQuery */
-                return new sDomQuery(domSelector);
+                return new DomQueryWrapper(domSelector);
             }          
 
             return wrapper;
@@ -1020,28 +1022,34 @@
                 $ = null;
 
             // Get all the functions defined - helper - Internal/private functions 
-            importList = moduleList.helper();
-            for ( _func in importList ) {
-                if ( "undefined" === typeof helper[_func] ) {
-                    helper[_func] = importList[_func];
-                }
-            }
-
-            // Get all the functions defined - Modules 
-            for ( _key in moduleList.modules) {
-                importList = moduleList.modules[_key](helper);
+            if ( Object.prototype.hasOwnProperty.call(moduleList, 'helper') ) {
+                importList = moduleList.helper();
                 for ( _func in importList ) {
-                    if ( "undefined" === typeof functionList[_func] ) {
-                        functionList[_func] = importList[_func];
+                    if ( "undefined" === typeof helper[_func] ) {
+                        helper[_func] = importList[_func];
                     }
                 }
             }
 
-            // Get all the functions defined - Utils - This is to expose util for $
-            importList = moduleList.utils(helper);
-            for ( _func in importList ) {
-                if ( "undefined" === typeof utilityList[_func] ) {
-                    utilityList[_func] = importList[_func];
+            // Get all the functions defined - Modules 
+            if ( Object.prototype.hasOwnProperty.call(moduleList, 'modules') ) {
+                for ( _key in moduleList.modules) {
+                    importList = moduleList.modules[_key](helper);
+                    for ( _func in importList ) {
+                        if ( "undefined" === typeof functionList[_func] ) {
+                            functionList[_func] = importList[_func];
+                        }
+                    }
+                }
+            }
+
+            if ( Object.prototype.hasOwnProperty.call(moduleList, 'utils') ) {
+                // Get all the functions defined - Utils - This is to expose util for $
+                importList = moduleList.utils(helper);
+                for ( _func in importList ) {
+                    if ( "undefined" === typeof utilityList[_func] ) {
+                        utilityList[_func] = importList[_func];
+                    }
                 }
             }
 
