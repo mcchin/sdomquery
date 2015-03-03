@@ -1,16 +1,15 @@
 var allTestFiles = [];
-var TEST_REGEXP = /(spec|test)\.js$/i;
+var TEST_REGEXP = /specs\/(.*)\.js$/i;
 
 var pathToModule = function(path) {
-  return path.replace(/^\/base\//, '').replace(/^\/absolute/, '').replace(/\.js$/, '');
+  return path.replace(/^\/base\//, '').replace(/\.js$/, '');
 };
 
 Object.keys(window.__karma__.files).forEach(function(file) {
-console.log(pathToModule(file));
   if (TEST_REGEXP.test(file)) {
     // Normalize paths to RequireJS module names.
     allTestFiles.push(pathToModule(file));
-  }
+  } 
 });
 
 require.config({

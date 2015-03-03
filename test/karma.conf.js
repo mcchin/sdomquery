@@ -14,8 +14,6 @@ module.exports = function(config) {
 
 
     // list of files / patterns to load in the browser
-      //'test-main.js',
-      //{pattern: 'specs/**/*.js', included: false}
     files: [
       'test-main.js',
       'lib/**/*.js',
@@ -69,10 +67,5 @@ module.exports = function(config) {
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: true
 
-    //client: {
-    //  mocha: {
-    //    ui: 'bdd'
-    //  }
-    //}
   });
 };

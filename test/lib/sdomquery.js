@@ -97,7 +97,7 @@
                     if ( this[i].className ) {
                         this[i].className = this[i].className
                                                    .replace(
-                                                        new RegExp('(\\s|^)'+className+'(\\s|$)')
+                                                        new RegExp('(\\s|^)'+className+'(\\s|$)'), ""
                                                     );
                         output.push(this[i]);
                     }
