@@ -2,6 +2,13 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    copy: {
+      main: {
+        files: [
+          {expand: true, flatten: true, src: ['dist/sdomquery.js'], dest: 'test/lib/'}
+        ]
+      }
+    },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
@@ -22,6 +29,11 @@ module.exports = function(grunt) {
         }
       }
     },
+    karma: {
+      unit: {
+        configFile: 'test/karma.conf.js'
+      }
+    },
     jshint: {
       files: ['src/**/*.js'],
       options: {
@@ -38,8 +50,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('default', ['jshint', 'browserify', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'browserify', 'copy', 'karma', 'uglify']);
 
 };
