@@ -1,4 +1,5 @@
 describe('Utils', function(){
+
   describe('#utilsindexOf()', function(){
     it('shouldx return -1 when the value is not present', function(){
       assert.equal(-1, [1,2,3].indexOf(5));
@@ -9,5 +10,6 @@ describe('Utils', function(){
       expect(document.getElementById('main')).to.not.be.undefined;
     })
   })
+
 })
 

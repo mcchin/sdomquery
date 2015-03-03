@@ -1,16 +1,11 @@
 describe('General', function(){
+
   document.body.innerHTML = __html__['html/test.html'];
-  expect(document.getElementById('main')).to.not.be.undefined;
 
-  describe('1#xaddClass()', function(){
-    it('should contain the string "new-class" after adding', function(){
-      console.log('[' + $('#elementTop').attr('class') + ']');
-    })
+  it('should contain more than one ".ele" elements', function(){
+    var count = $('.ele').length;
+    expect(count).to.be.at.least(1);
   })
 
-  describe('1#xremoveClass()', function(){
-    it('should not contain the string "top" after removing', function(){
-    })
-  })
 })
 

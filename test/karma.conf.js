@@ -10,14 +10,14 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'requirejs', 'chai'],
+    frameworks: ['mocha', 'requirejs', 'chai', 'effroi', 'phantomjs-shim'],
 
 
     // list of files / patterns to load in the browser
     files: [
       'test-main.js',
-      'lib/**/*.js',
       'html/**/*.html',
+      'lib/**/*.js',
       {pattern: 'specs/**/*.js', included: false}
     ],
 
@@ -39,6 +39,7 @@ module.exports = function(config) {
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['mocha'],
+
 
     // web server port
     port: 9876,
