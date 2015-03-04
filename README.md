@@ -6,7 +6,9 @@
                 /_/                                                          /____/   </pre>
 
 
-[![Build Status](https://travis-ci.org/mcchin/sdomquery.svg?branch=master)](https://travis-ci.org/mcchin/sdomquery) [![Code Climate](https://codeclimate.com/github/mcchin/sdomquery/badges/gpa.svg)](https://codeclimate.com/github/mcchin/sdomquery)
+[![Build Status](https://travis-ci.org/mcchin/sdomquery.svg?branch=master)](https://travis-ci.org/mcchin/sdomquery) [![Code Climate](https://codeclimate.com/github/mcchin/sdomquery/badges/gpa.svg)](https://codeclimate.com/github/mcchin/sdomquery) [![Sauce Test Status](https://saucelabs.com/buildstatus/mcchin)](https://saucelabs.com/u/mcchin)
+
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/mcchin.svg)](https://saucelabs.com/u/mcchin)
 
 Just want a small enough library to query DOM for micro projects instead of including the entire jQuery.
 

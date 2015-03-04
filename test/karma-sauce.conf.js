@@ -63,8 +63,7 @@ module.exports = function(config) {
 
 
     sauceLabs: {
-      testName: 'sDomQuery test',
-      startConnect: false
+      testName: 'sDomQuery test'
     },
     captureTimeout: 120000,
     customLaunchers: customLaunchers,
