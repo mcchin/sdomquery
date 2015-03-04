@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    /* global window, global, self, navigator */
+    /* global window, global, self, navigator, DomQuery */
 
     var helper = require('./helper.js');
 
@@ -58,7 +58,7 @@
                 }
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.prepend = function(html) {
             var i = 0,
@@ -82,7 +82,7 @@
                 }
             }
             
-            return output;
+            return new DomQuery(output);
         };
         this.isNumeric = function(obj) {
             return (obj - parseFloat(obj)) === 0;

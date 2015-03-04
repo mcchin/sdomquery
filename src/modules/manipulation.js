@@ -1,6 +1,8 @@
 (function () {
     "use strict";
 
+    /* global DomQuery */
+    
     var helper = require('./helper.js');
 
     function Manipulation() {
@@ -42,7 +44,7 @@
                 for ( ; i < arguments[0].length ; i++ ) {
                     output[arguments[0][i]] = this[0].getAttribute(arguments[0][i]);
                 }
-                return output;
+                return new DomQuery(output);
             } else if ( arguments.length === 1 && typeof arguments[0] === "object" ) {
                 for ( prop in arguments[0] ) {
                     attrs[prop] = arguments[0][prop];
@@ -54,7 +56,7 @@
                 for ( ; i < this[0].attributes.length ; i++ ) {
                     output[this[0].attributes[i].nodeName] = this[0].attributes[i].value;
                 }							
-                return output;
+                return new DomQuery(output);
             }
 
             for ( prop in attrs ) {

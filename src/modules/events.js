@@ -1,6 +1,8 @@
 (function () {
     "use strict";
 
+    /* global DomQuery */
+    
     var isReady = false,
         readyCallback = null;
 
@@ -20,39 +22,39 @@
         };
         this.click = function() {
             var output = helper.bindEvent(this, 'click', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.dblclick = function() {
             var output = helper.bindEvent(this, 'dblclick', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mousemove = function() {
             var output = helper.bindEvent(this, 'mousemove', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mouseover = function() {
             var output = helper.bindEvent(this, 'mouseover', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mouseout = function() {
             var output = helper.bindEvent(this, 'mouseout', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mouseup = function() {
             var output = helper.bindEvent(this, 'mouseup', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mousedown = function() {
             var output = helper.bindEvent(this, 'mousedown', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mouseleave = function() {
             var output = helper.bindEvent(this, 'mouseleave', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mouseenter = function() {
             var output = helper.bindEvent(this, 'mouseenter', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.hover = function() {
             var output = [],
@@ -72,7 +74,7 @@
                 helper.bindEvent(this, 'mouseenter', helper, [callbackOut]);
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.keyup = function() {
             return helper.bindEvent(this, 'keyup', helper, arguments);
@@ -146,7 +148,7 @@
 
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.trigger = function(eventName) {
             /* global DomQuery */
@@ -168,7 +170,7 @@
                     }
                 }
             }
-            return output;
+            return new DomQuery(output);
         };
     }
 

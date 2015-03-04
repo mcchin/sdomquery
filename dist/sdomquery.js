@@ -69,6 +69,8 @@
 (function () {
     "use strict";
 
+    /* global DomQuery */
+    
     var helper = require('./helper.js');
 
     function Css() {
@@ -85,7 +87,7 @@
                 }
             }				
 
-            return output;
+            return new DomQuery(output);
         };
         this.removeClass = function(className) {
             var output = [],
@@ -104,7 +106,7 @@
                 }
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.hasClass = function(className) {
             var i = 0;
@@ -151,7 +153,7 @@
                 }
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.styles = function() {
             if ( this.length > 0 ) {
@@ -168,6 +170,8 @@
 (function () {
     "use strict";
 
+    /* global DomQuery */
+    
     var isReady = false,
         readyCallback = null;
 
@@ -187,39 +191,39 @@
         };
         this.click = function() {
             var output = helper.bindEvent(this, 'click', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.dblclick = function() {
             var output = helper.bindEvent(this, 'dblclick', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mousemove = function() {
             var output = helper.bindEvent(this, 'mousemove', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mouseover = function() {
             var output = helper.bindEvent(this, 'mouseover', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mouseout = function() {
             var output = helper.bindEvent(this, 'mouseout', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mouseup = function() {
             var output = helper.bindEvent(this, 'mouseup', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mousedown = function() {
             var output = helper.bindEvent(this, 'mousedown', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mouseleave = function() {
             var output = helper.bindEvent(this, 'mouseleave', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.mouseenter = function() {
             var output = helper.bindEvent(this, 'mouseenter', helper, arguments);
-            return output;
+            return new DomQuery(output);
         };
         this.hover = function() {
             var output = [],
@@ -239,7 +243,7 @@
                 helper.bindEvent(this, 'mouseenter', helper, [callbackOut]);
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.keyup = function() {
             return helper.bindEvent(this, 'keyup', helper, arguments);
@@ -313,7 +317,7 @@
 
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.trigger = function(eventName) {
             /* global DomQuery */
@@ -335,7 +339,7 @@
                     }
                 }
             }
-            return output;
+            return new DomQuery(output);
         };
     }
 
@@ -523,6 +527,8 @@
 (function () {
     "use strict";
 
+    /* global DomQuery */
+    
     var helper = require('./helper.js');
 
     function Manipulation() {
@@ -564,7 +570,7 @@
                 for ( ; i < arguments[0].length ; i++ ) {
                     output[arguments[0][i]] = this[0].getAttribute(arguments[0][i]);
                 }
-                return output;
+                return new DomQuery(output);
             } else if ( arguments.length === 1 && typeof arguments[0] === "object" ) {
                 for ( prop in arguments[0] ) {
                     attrs[prop] = arguments[0][prop];
@@ -576,7 +582,7 @@
                 for ( ; i < this[0].attributes.length ; i++ ) {
                     output[this[0].attributes[i].nodeName] = this[0].attributes[i].value;
                 }							
-                return output;
+                return new DomQuery(output);
             }
 
             for ( prop in attrs ) {
@@ -594,6 +600,8 @@
 },{"./helper.js":4}],6:[function(require,module,exports){
 (function () {
     "use strict";
+
+    /* global DomQuery */
 
     var helper = require('./helper.js');
 
@@ -627,7 +635,7 @@
                     that.scrollLeft = parseFloat(px) || 0;    
                 }
             }
-            return [that];
+            return new DomQuery(that);
         } else {
             return (direction ? parseFloat(that.scrollTop) : parseFloat(that.scrollLeft)) || 0;
         }        
@@ -734,7 +742,7 @@
                         output.push(this[i]);
                     }
                     
-                    return output;
+                    return new DomQuery(output);
                 } else {
                     return helper.findOffset(this[0]);
                 }
@@ -762,7 +770,7 @@
                         output.push(this[i]);
                     }
                     
-                    return output;
+                    return new DomQuery(output);
                 } else {
                     return {
                         top: this[0].offsetTop,
@@ -793,9 +801,11 @@
 (function () {
     "use strict";
 
+    /* global DomQuery */
+
     var helper = require('./helper.js');
 
-    function traverseSibling(that, direction) {
+    function traverseSibling(that, domSelector, direction) {
         var output = [],
             sibling = null,
             i = 0;
@@ -807,7 +817,7 @@
                 sibling = that[i].previousSibling;
             }
 
-            while ( null !== nextSibling ) {
+            while ( null !== sibling ) {
                 if ( sibling.nodeType === 1 ) {
                     if ( !domSelector || 
                          (helper.stringNotBlank(domSelector) && helper.matchesSelector(sibling, domSelector)) ) {
@@ -818,11 +828,11 @@
                     sibling = sibling.nextSibling;
                 } else {
                     sibling = sibling.previousSibling;
-                }                
+                }
             }
         }
 
-        return output;        
+        return new DomQuery(output);        
     }
 
     function Traverse() {
@@ -845,7 +855,7 @@
                 }
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.has = function(domSelector) {
             var output = [],
@@ -861,7 +871,7 @@
                         }
                     }
                 }
-                return output;
+                return new DomQuery(output);
             }
 
             return;
@@ -894,7 +904,7 @@
                 }
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.parent = function(domSelector) {
             var output = [],
@@ -925,29 +935,29 @@
                 }
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.first = function() {
             if ( this.length ) {
-                return [this[0]];
+                return new DomQuery(this[0]);
             }
             return;
         };
         this.last = function() {
             if ( this.length ) {
-                return [this[this.length - 1]];
+                return new DomQuery(this[this.length - 1]);
             }						
             return;
         };
         this.next = function(domSelector) {
-            return traverseSibling(this, true);
+            return traverseSibling(this, domSelector, true);
         };
         this.prev = function(domSelector) {
-            return traverseSibling(this, false);
+            return traverseSibling(this, domSelector, false);
         };
         this.get = function(idx) {
             if ( this.length && "undefined" !== this[idx] ) {
-                return [this[idx]];
+                return new DomQuery(this[idx]);
             }
             return;
         };
@@ -959,7 +969,7 @@
 (function () {
     "use strict";
 
-    /* global window, global, self, navigator */
+    /* global window, global, self, navigator, DomQuery */
 
     var helper = require('./helper.js');
 
@@ -1016,7 +1026,7 @@
                 }
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.prepend = function(html) {
             var i = 0,
@@ -1040,7 +1050,7 @@
                 }
             }
             
-            return output;
+            return new DomQuery(output);
         };
         this.isNumeric = function(obj) {
             return (obj - parseFloat(obj)) === 0;

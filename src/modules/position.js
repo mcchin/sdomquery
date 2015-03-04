@@ -1,6 +1,8 @@
 (function () {
     "use strict";
 
+    /* global DomQuery */
+
     var helper = require('./helper.js');
 
     function getOuterDimension(styles) {
@@ -33,7 +35,7 @@
                     that.scrollLeft = parseFloat(px) || 0;    
                 }
             }
-            return [that];
+            return new DomQuery(that);
         } else {
             return (direction ? parseFloat(that.scrollTop) : parseFloat(that.scrollLeft)) || 0;
         }        
@@ -140,7 +142,7 @@
                         output.push(this[i]);
                     }
                     
-                    return output;
+                    return new DomQuery(output);
                 } else {
                     return helper.findOffset(this[0]);
                 }
@@ -168,7 +170,7 @@
                         output.push(this[i]);
                     }
                     
-                    return output;
+                    return new DomQuery(output);
                 } else {
                     return {
                         top: this[0].offsetTop,

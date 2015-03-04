@@ -1,6 +1,8 @@
 (function () {
     "use strict";
 
+    /* global DomQuery */
+    
     var helper = require('./helper.js');
 
     function Css() {
@@ -17,7 +19,7 @@
                 }
             }				
 
-            return output;
+            return new DomQuery(output);
         };
         this.removeClass = function(className) {
             var output = [],
@@ -36,7 +38,7 @@
                 }
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.hasClass = function(className) {
             var i = 0;
@@ -83,7 +85,7 @@
                 }
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.styles = function() {
             if ( this.length > 0 ) {

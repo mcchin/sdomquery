@@ -1,13 +1,34 @@
 describe('Position', function(){
-  describe('#positioindexOf()', function(){
-    it('shouldx return -1 when the value is not present', function(){
-      assert.equal(-1, [1,2,3].indexOf(5));
-      assert.equal(-1, [1,2,3].indexOf(0));
-    })
-    it('should xxreturn -1 when the value is not present', function(){
-      document.body.innerHTML = __html__['html/test.html'];
-      expect(document.getElementById('main')).to.not.be.undefined;
+
+  document.body.innerHTML = __html__['html/test.html'];
+
+  describe('#height()', function(){
+    it('should return value greater than zero', function(){
+      var h = $('#wrapper').height();
+      expect(h).to.be.above(0);
     })
   })
+
+  describe('#width()', function(){
+    it('should return value greater than zero', function(){
+      var w = $('#wrapper').width();
+      expect(w).to.be.above(0);
+    })
+  })
+
+  describe('#innerHeight()', function(){
+    it('should return value greater than zero', function(){
+      var h = $('#wrapper').innerHeight();
+      expect(h).to.be.above(0);
+    })
+  })
+
+  describe('#innerWidth()', function(){
+    it('should return value greater than zero', function(){
+      var w = $('#wrapper').innerWidth();
+      expect(w).to.be.above(0);
+    })
+  })
+
 })
 

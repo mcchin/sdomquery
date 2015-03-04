@@ -1,9 +1,11 @@
 (function () {
     "use strict";
 
+    /* global DomQuery */
+
     var helper = require('./helper.js');
 
-    function traverseSibling(that, direction) {
+    function traverseSibling(that, domSelector, direction) {
         var output = [],
             sibling = null,
             i = 0;
@@ -15,7 +17,7 @@
                 sibling = that[i].previousSibling;
             }
 
-            while ( null !== nextSibling ) {
+            while ( null !== sibling ) {
                 if ( sibling.nodeType === 1 ) {
                     if ( !domSelector || 
                          (helper.stringNotBlank(domSelector) && helper.matchesSelector(sibling, domSelector)) ) {
@@ -26,11 +28,11 @@
                     sibling = sibling.nextSibling;
                 } else {
                     sibling = sibling.previousSibling;
-                }                
+                }
             }
         }
 
-        return output;        
+        return new DomQuery(output);        
     }
 
     function Traverse() {
@@ -53,7 +55,7 @@
                 }
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.has = function(domSelector) {
             var output = [],
@@ -69,7 +71,7 @@
                         }
                     }
                 }
-                return output;
+                return new DomQuery(output);
             }
 
             return;
@@ -102,7 +104,7 @@
                 }
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.parent = function(domSelector) {
             var output = [],
@@ -133,29 +135,29 @@
                 }
             }
 
-            return output;
+            return new DomQuery(output);
         };
         this.first = function() {
             if ( this.length ) {
-                return [this[0]];
+                return new DomQuery(this[0]);
             }
             return;
         };
         this.last = function() {
             if ( this.length ) {
-                return [this[this.length - 1]];
+                return new DomQuery(this[this.length - 1]);
             }						
             return;
         };
         this.next = function(domSelector) {
-            return traverseSibling(this, true);
+            return traverseSibling(this, domSelector, true);
         };
         this.prev = function(domSelector) {
-            return traverseSibling(this, false);
+            return traverseSibling(this, domSelector, false);
         };
         this.get = function(idx) {
             if ( this.length && "undefined" !== this[idx] ) {
-                return [this[idx]];
+                return new DomQuery(this[idx]);
             }
             return;
         };
