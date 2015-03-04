@@ -30,8 +30,11 @@ module.exports = function(grunt) {
       }
     },
     karma: {
-      unit: {
+      local: {
         configFile: 'test/karma.conf.js'
+      },
+      sauce: {
+        configFile: 'test/karma-sauce.conf.js'
       }
     },
     jshint: {
@@ -55,6 +58,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask('compile', ['jshint', 'browserify', 'copy', 'uglify']);
-  grunt.registerTask('default', ['jshint', 'browserify', 'copy', 'karma', 'uglify']);
+  grunt.registerTask('build', ['jshint', 'browserify', 'copy', 'karma:local', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'browserify', 'copy', 'karma:sauce', 'uglify']);
 
 };
