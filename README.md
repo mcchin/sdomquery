@@ -8,7 +8,7 @@
 
 [![Build Status](https://travis-ci.org/mcchin/sdomquery.svg?branch=master)](https://travis-ci.org/mcchin/sdomquery) [![Code Climate](https://codeclimate.com/github/mcchin/sdomquery/badges/gpa.svg)](https://codeclimate.com/github/mcchin/sdomquery) <a href="https://saucelabs.com/u/mcchin"><img src="https://saucelabs.com/buildstatus/mcchin?auth=d02924762a16cab19d030cd6fb75c8e9" alt="Sauce Test Status"/></a>
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/mcchin.svg?auth=d02924762a16cab19d030cd6fb75c8e9)](https://saucelabs.com/u/mcchin)
+<a href="https://saucelabs.com/u/mcchin"><img src="https://saucelabs.com/browser-matrix/mcchin.svg?auth=d02924762a16cab19d030cd6fb75c8e9" alt="Sauce Test Status"/></a>
 
 Just want a small enough library to query DOM for micro projects instead of including the entire jQuery.
 
