@@ -13,17 +13,17 @@ module.exports = function(config) {
   }
 
   var customLaunchers = {
-/*
     'SL_Chrome': {
       base: 'SauceLabs',
       browserName: 'chrome'
-    },
-*/
+    }
+/*
     'SL_Firefox': {
       base: 'SauceLabs',
       browserName: 'internet explorer',
       version: '9'
     }
+*/
   };
 
   config.set({
@@ -51,7 +51,7 @@ module.exports = function(config) {
     },
 
 
-    reporters: ['mocha'],
+    reporters: ['mocha', 'saucelabs'],
 
 
     port: 9876,
@@ -65,7 +65,8 @@ module.exports = function(config) {
 
     sauceLabs: {
       testName: 'sDomQuery test',
-      startConnect: false
+      startConnect: false,
+      build: '27'
     },
     captureTimeout: 120000,
     customLaunchers: customLaunchers,
