@@ -72,7 +72,7 @@ module.exports = function(config) {
 
     sauceLabs: {
       testName: 'sDomQuery test',
-      startConnect: false,
+      //startConnect: false,
       connectOptions: {
         port: 5757,
         logfile: 'sauce_connect.log'
