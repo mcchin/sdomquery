@@ -60,6 +60,6 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['jshint', 'browserify', 'copy', 'karma:sauce']);
   grunt.registerTask('compile', ['jshint', 'browserify', 'copy', 'uglify']);
   grunt.registerTask('build', ['jshint', 'browserify', 'copy', 'karma:local', 'uglify']);
-  grunt.registerTask('default', ['jshint', 'browserify', 'copy', 'karma:local', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'browserify', 'copy', 'karma:sauce', 'uglify']);
 
 };
