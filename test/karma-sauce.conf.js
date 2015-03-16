@@ -139,7 +139,7 @@ module.exports = function(config) {
 
     sauceLabs: {
       testName: 'sDomQuery test',
-      //startConnect: false,
+      startConnect: false,
       tags: (!process.env.SAUCE_USERNAME || !process.env.TRAVIS_BRANCH) ? [] : [ process.env.SAUCE_USERNAME+"@"+process.env.TRAVIS_BRANCH || process.env.SAUCE_USERNAME+"@local" ],
       connectOptions: {
         port: 5757,
