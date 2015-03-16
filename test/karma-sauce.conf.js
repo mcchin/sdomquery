@@ -8,77 +8,22 @@ module.exports = function(config) {
   }
 
   var customLaunchers = {
-    sl_chrome_35: {
-      base: 'SauceLabs',
-      browserName: 'chrome',
-      platform: 'Windows 7',
-      version: '35'
-    },
-    sl_chrome_36: {
-      base: 'SauceLabs',
-      browserName: 'chrome',
-      platform: 'Windows 7',
-      version: '36'
-    },
-    sl_chrome_37: {
-      base: 'SauceLabs',
-      browserName: 'chrome',
-      platform: 'Windows 7',
-      version: '37'
-    },
-    sl_chrome_38: {
-      base: 'SauceLabs',
-      browserName: 'chrome',
-      platform: 'Windows 7',
-      version: '38'
-    },
-    sl_chrome_39: {
-      base: 'SauceLabs',
-      browserName: 'chrome',
-      platform: 'Windows 7',
-      version: '39'
-    },
-    sl_chrome_40: {
-      base: 'SauceLabs',
-      browserName: 'chrome',
-      platform: 'Windows 7',
-      version: '40'
-    },
-    sl_firefox_30: {
-      base: 'SauceLabs',
-      browserName: 'firefox',
-      version: '30'
-    },
-    sl_firefox_31: {
-      base: 'SauceLabs',
-      browserName: 'firefox',
-      version: '31'
-    },
-    sl_firefox_32: {
-      base: 'SauceLabs',
-      browserName: 'firefox',
-      version: '32'
-    },
-    sl_firefox_33: {
-      base: 'SauceLabs',
-      browserName: 'firefox',
-      version: '33'
-    },
-    sl_firefox_34: {
-      base: 'SauceLabs',
-      browserName: 'firefox',
-      version: '34'
-    },
-    sl_firefox_35: {
-      base: 'SauceLabs',
-      browserName: 'firefox',
-      version: '35'
-    },
     sl_ios_safari: {
       base: 'SauceLabs',
       browserName: 'iphone',
       platform: 'OS X 10.9',
       version: '7.1'
+    },    
+    sl_chrome_40: {
+      base: 'SauceLabs',
+      browserName: 'chrome',
+      platform: 'Windows 7',
+      version: '40'
+    },    
+    sl_firefox_35: {
+      base: 'SauceLabs',
+      browserName: 'firefox',
+      version: '35'
     },
     sl_ie_9: {
       base: 'SauceLabs',
@@ -97,7 +42,7 @@ module.exports = function(config) {
       browserName: 'internet explorer',
       platform: 'Windows 8.1',
       version: '11'
-    }
+    } 
   };
 
   config.set({
@@ -139,7 +84,7 @@ module.exports = function(config) {
 
     sauceLabs: {
       testName: 'sDomQuery test',
-      startConnect: false,
+      //startConnect: false,
       tags: (!process.env.SAUCE_USERNAME || !process.env.TRAVIS_BRANCH) ? [] : [ process.env.SAUCE_USERNAME+"@"+process.env.TRAVIS_BRANCH || process.env.SAUCE_USERNAME+"@local" ],
       connectOptions: {
         port: 5757,

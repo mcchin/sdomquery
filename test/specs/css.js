@@ -45,9 +45,10 @@ describe('Css', function(){
 
   describe('#styles()', function(){
     it('should return color "black" and backgroundColor "blue" when checking styles', function(){
+      $('#elementTop').css({"color": "black", "backgroundColor": "blue"});
       var style = $('#elementTop').styles();
       expect(style['color']).to.have.string('rgb(0, 0, 0)');
-      expect(style['background-color']).to.have.string('rgb(0, 0, 255)');
+      expect(style['backgroundColor']).to.have.string('rgb(0, 0, 255)');
     })
   })
 

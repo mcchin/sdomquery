@@ -57,6 +57,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-karma');
 
+  grunt.registerTask('testsauce', ['jshint', 'browserify', 'copy', 'karma:sauce']);
   grunt.registerTask('test', ['jshint', 'browserify', 'copy', 'karma:local']);
   grunt.registerTask('compile', ['jshint', 'browserify', 'copy', 'uglify']);
   grunt.registerTask('build', ['jshint', 'browserify', 'copy', 'karma:local', 'uglify']);
