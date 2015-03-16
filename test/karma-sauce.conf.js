@@ -8,22 +8,111 @@ module.exports = function(config) {
   }
 
   var customLaunchers = {
-    sl_chrome: {
+    sl_chrome_35: {
       base: 'SauceLabs',
       browserName: 'chrome',
       platform: 'Windows 7',
       version: '35'
     },
-    sl_firefox: {
+    sl_chrome_36: {
+      base: 'SauceLabs',
+      browserName: 'chrome',
+      platform: 'Windows 7',
+      version: '36'
+    },
+    sl_chrome_37: {
+      base: 'SauceLabs',
+      browserName: 'chrome',
+      platform: 'Windows 7',
+      version: '37'
+    },
+    sl_chrome_38: {
+      base: 'SauceLabs',
+      browserName: 'chrome',
+      platform: 'Windows 7',
+      version: '38'
+    },
+    sl_chrome_39: {
+      base: 'SauceLabs',
+      browserName: 'chrome',
+      platform: 'Windows 7',
+      version: '39'
+    },
+    sl_chrome_40: {
+      base: 'SauceLabs',
+      browserName: 'chrome',
+      platform: 'Windows 7',
+      version: '40'
+    },
+    sl_chrome_b: {
+      base: 'SauceLabs',
+      browserName: 'chrome',
+      platform: 'Windows 7',
+      version: 'b'
+    },
+    sl_chrome_d: {
+      base: 'SauceLabs',
+      browserName: 'chrome',
+      platform: 'Windows 7',
+      version: 'd'
+    },
+    sl_firefox_30: {
       base: 'SauceLabs',
       browserName: 'firefox',
       version: '30'
+    },
+    sl_firefox_31: {
+      base: 'SauceLabs',
+      browserName: 'firefox',
+      version: '31'
+    },
+    sl_firefox_32: {
+      base: 'SauceLabs',
+      browserName: 'firefox',
+      version: '32'
+    },
+    sl_firefox_33: {
+      base: 'SauceLabs',
+      browserName: 'firefox',
+      version: '33'
+    },
+    sl_firefox_34: {
+      base: 'SauceLabs',
+      browserName: 'firefox',
+      version: '34'
+    },
+    sl_firefox_35: {
+      base: 'SauceLabs',
+      browserName: 'firefox',
+      version: '35'
+    },
+    sl_firefox_b: {
+      base: 'SauceLabs',
+      browserName: 'firefox',
+      version: 'b'
+    },
+    sl_firefox_d: {
+      base: 'SauceLabs',
+      browserName: 'firefox',
+      version: 'd'
     },
     sl_ios_safari: {
       base: 'SauceLabs',
       browserName: 'iphone',
       platform: 'OS X 10.9',
       version: '7.1'
+    },
+    sl_ie_9: {
+      base: 'SauceLabs',
+      browserName: 'internet explorer',
+      platform: 'Windows 7',
+      version: '9'
+    },
+    sl_ie_10: {
+      base: 'SauceLabs',
+      browserName: 'internet explorer',
+      platform: 'Windows 7',
+      version: '10'
     },
     sl_ie_11: {
       base: 'SauceLabs',
