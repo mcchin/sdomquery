@@ -1063,7 +1063,7 @@
         };
         this.isPlainObject = function(obj) {
             // Check if variable is a {}
-            return "object" === typeof obj && "Object" === obj.constructor.name;
+            return "object" === typeof obj && ("Object" === obj.constructor.name || "[object Object]" === Object.prototype.toString.call(obj));
         };
         this.isEmpty = function(obj) {
             var _key;
