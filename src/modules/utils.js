@@ -46,23 +46,20 @@
             return mergeTarget;
         };
         this.append = function(html) {
-            var i = 0,
-                output = [];
+            var i = 0;
 
             if ( this.length > 0 && 
                  helper.stringNotBlank(html) ) {
 
                 for ( ; i < this.length ; i++ ) {
                     this[i].innerHTML += html;
-                    output.push(this[i]);
                 }
             }
 
-            return new DomQuery(output);
+            return this;
         };
         this.prepend = function(html) {
             var i = 0,
-                output = [],
                 tmpElement = null;					
             
             if ( this.length > 0 && 
@@ -78,11 +75,10 @@
                     } else {
                         this[i].insertBefore(tmpElement, this[i].firstChild);
                     }
-                    output.push(this[i]);
                 }
             }
             
-            return new DomQuery(output);
+            return this;
         };
         this.isNumeric = function(obj) {
             return (obj - parseFloat(obj)) === 0;

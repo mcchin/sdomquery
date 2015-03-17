@@ -35,7 +35,7 @@
                     that.scrollLeft = parseFloat(px) || 0;    
                 }
             }
-            return new DomQuery(that);
+            return that;
         } else {
             return (direction ? parseFloat(that.scrollTop) : parseFloat(that.scrollLeft)) || 0;
         }        
@@ -92,8 +92,7 @@
             return;
         };
         this.offset = function(coords) {
-            var output = [],
-                dim = {
+            var dim = {
                     parentLeft: 0,
                     parentTop: 0,
                     newLeft: 0,
@@ -139,10 +138,9 @@
                             left: (parseFloat(dim.newLeft - dim.parentLeft) || 0) + 'px'
                         });
 
-                        output.push(this[i]);
                     }
                     
-                    return new DomQuery(output);
+                    return this;
                 } else {
                     return helper.findOffset(this[0]);
                 }
@@ -151,8 +149,7 @@
             return;
         };
         this.position = function(coords) {
-            var output = [],
-                i = 0;
+            var i = 0;
 
             if ( this.length > 0 ) {
                 if ( this.isFunction(coords) ) {
@@ -167,10 +164,9 @@
                         coords.left = this.isNumeric(coords.left) ? coords.left + 'px' : coords.left;
 
                         $(this[i]).css(coords);
-                        output.push(this[i]);
                     }
                     
-                    return new DomQuery(output);
+                    return this;
                 } else {
                     return {
                         top: this[0].offsetTop,

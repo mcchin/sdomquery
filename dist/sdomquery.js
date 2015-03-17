@@ -184,44 +184,43 @@
             }
         };
         this.click = function() {
-            var output = helper.bindEvent(this, 'click', helper, arguments);
-            return new DomQuery(output);
+            helper.bindEvent(this, 'click', helper, arguments);
+            return this;
         };
         this.dblclick = function() {
-            var output = helper.bindEvent(this, 'dblclick', helper, arguments);
-            return new DomQuery(output);
+            helper.bindEvent(this, 'dblclick', helper, arguments);
+            return this;
         };
         this.mousemove = function() {
-            var output = helper.bindEvent(this, 'mousemove', helper, arguments);
-            return new DomQuery(output);
+            helper.bindEvent(this, 'mousemove', helper, arguments);
+            return this;
         };
         this.mouseover = function() {
-            var output = helper.bindEvent(this, 'mouseover', helper, arguments);
-            return new DomQuery(output);
+            helper.bindEvent(this, 'mouseover', helper, arguments);
+            return this;
         };
         this.mouseout = function() {
-            var output = helper.bindEvent(this, 'mouseout', helper, arguments);
-            return new DomQuery(output);
+            helper.bindEvent(this, 'mouseout', helper, arguments);
+            return this;
         };
         this.mouseup = function() {
-            var output = helper.bindEvent(this, 'mouseup', helper, arguments);
-            return new DomQuery(output);
+            helper.bindEvent(this, 'mouseup', helper, arguments);
+            return this;
         };
         this.mousedown = function() {
-            var output = helper.bindEvent(this, 'mousedown', helper, arguments);
-            return new DomQuery(output);
+            helper.bindEvent(this, 'mousedown', helper, arguments);
+            return this;
         };
         this.mouseleave = function() {
-            var output = helper.bindEvent(this, 'mouseleave', helper, arguments);
-            return new DomQuery(output);
+            helper.bindEvent(this, 'mouseleave', helper, arguments);
+            return this;
         };
         this.mouseenter = function() {
-            var output = helper.bindEvent(this, 'mouseenter', helper, arguments);
-            return new DomQuery(output);
+            helper.bindEvent(this, 'mouseenter', helper, arguments);
+            return this;
         };
         this.hover = function() {
-            var output = [],
-                callbackIn = null,
+            var callbackIn = null,
                 callbackOut = null;
 
             if ( arguments.length === 2) {
@@ -233,11 +232,11 @@
             }
 
             if ( arguments.length ) {
-                output = helper.bindEvent(this, 'mouseleave', helper, [callbackIn]);
+                helper.bindEvent(this, 'mouseleave', helper, [callbackIn]);
                 helper.bindEvent(this, 'mouseenter', helper, [callbackOut]);
             }
 
-            return new DomQuery(output);
+            return this;
         };
         this.keyup = function() {
             return helper.bindEvent(this, 'keyup', helper, arguments);
@@ -283,8 +282,7 @@
             var eventName = null,
                 domSelector = null,
                 handler = null,
-                i = 0,
-                output = [];
+                i = 0;
 
             if ( this.length > 0 ) {
                 if ( arguments.length === 3 && 
@@ -304,21 +302,19 @@
                          (helper.stringNotBlank(domSelector) && helper.matchesSelector(this[i], domSelector)) ) {
                         if ( "undefined" !== typeof this[i].removeEventListener ) {
                             helper.unbindEvent(this[i], eventName ? eventName : null, handler ? handler : null);
-                            output.push(this[i]);
                         } 
                     }
                 }							
 
             }
 
-            return new DomQuery(output);
+            return this;
         };
         this.trigger = function(eventName) {
             /* global DomQuery */
             var i = 0,
                 j = 0,
-                params = [],
-                output = [];
+                params = [];
 
             if ( this.length > 0 ) {
                 if ( helper.stringNotBlank(eventName) ) {
@@ -327,13 +323,12 @@
                         for ( j = 0 ; j < this[i][DomQuery.uuid].length ; j++ ) {
                             if ( eventName === this[i][DomQuery.uuid][j].eventName ) {
                                 this[i][DomQuery.uuid][j].handler.apply(this[i], params);
-                                output.push(this[i]);
                             }
                         }
                     }
                 }
             }
-            return new DomQuery(output);
+            return this;
         };
     }
 
@@ -564,7 +559,7 @@
                 for ( ; i < arguments[0].length ; i++ ) {
                     output[arguments[0][i]] = this[0].getAttribute(arguments[0][i]);
                 }
-                return new DomQuery(output);
+                return output;
             } else if ( arguments.length === 1 && typeof arguments[0] === "object" ) {
                 for ( prop in arguments[0] ) {
                     attrs[prop] = arguments[0][prop];
@@ -576,7 +571,7 @@
                 for ( ; i < this[0].attributes.length ; i++ ) {
                     output[this[0].attributes[i].nodeName] = this[0].attributes[i].value;
                 }							
-                return new DomQuery(output);
+                return output;
             }
 
             for ( prop in attrs ) {
@@ -629,7 +624,7 @@
                     that.scrollLeft = parseFloat(px) || 0;    
                 }
             }
-            return new DomQuery(that);
+            return that;
         } else {
             return (direction ? parseFloat(that.scrollTop) : parseFloat(that.scrollLeft)) || 0;
         }        
@@ -686,8 +681,7 @@
             return;
         };
         this.offset = function(coords) {
-            var output = [],
-                dim = {
+            var dim = {
                     parentLeft: 0,
                     parentTop: 0,
                     newLeft: 0,
@@ -733,10 +727,9 @@
                             left: (parseFloat(dim.newLeft - dim.parentLeft) || 0) + 'px'
                         });
 
-                        output.push(this[i]);
                     }
                     
-                    return new DomQuery(output);
+                    return this;
                 } else {
                     return helper.findOffset(this[0]);
                 }
@@ -745,8 +738,7 @@
             return;
         };
         this.position = function(coords) {
-            var output = [],
-                i = 0;
+            var i = 0;
 
             if ( this.length > 0 ) {
                 if ( this.isFunction(coords) ) {
@@ -761,10 +753,9 @@
                         coords.left = this.isNumeric(coords.left) ? coords.left + 'px' : coords.left;
 
                         $(this[i]).css(coords);
-                        output.push(this[i]);
                     }
                     
-                    return new DomQuery(output);
+                    return this;
                 } else {
                     return {
                         top: this[0].offsetTop,
@@ -1008,23 +999,20 @@
             return mergeTarget;
         };
         this.append = function(html) {
-            var i = 0,
-                output = [];
+            var i = 0;
 
             if ( this.length > 0 && 
                  helper.stringNotBlank(html) ) {
 
                 for ( ; i < this.length ; i++ ) {
                     this[i].innerHTML += html;
-                    output.push(this[i]);
                 }
             }
 
-            return new DomQuery(output);
+            return this;
         };
         this.prepend = function(html) {
             var i = 0,
-                output = [],
                 tmpElement = null;					
             
             if ( this.length > 0 && 
@@ -1040,11 +1028,10 @@
                     } else {
                         this[i].insertBefore(tmpElement, this[i].firstChild);
                     }
-                    output.push(this[i]);
                 }
             }
             
-            return new DomQuery(output);
+            return this;
         };
         this.isNumeric = function(obj) {
             return (obj - parseFloat(obj)) === 0;
