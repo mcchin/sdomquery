@@ -18,6 +18,7 @@ Just want a small enough library to query DOM for micro projects instead of incl
 
 ## Release History
 
+* 2015-03-17 : Version 0.1
 * 2015-02-10 : Work in progress
 
 ## Special thanks 

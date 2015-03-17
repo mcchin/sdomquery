@@ -15,12 +15,13 @@
         data = require('./modules/data.js');
     
     if ( !runOnce ) {
-        // Attach uniq ID - This is to keep reference to bind / unbind events
+        // Attach uniq ID - This is to keep reference to bind / unbind events and reference for data cache
         wrapper.uuid = 'DomQuery' + String(Math.random()).substring(2) + Date.now();
         wrapper.guid = 0;
 
         // Attach utils and other functions to the core
         utils.extend(wrapper, utils);
+        // Can remove unwanted functions here if needed, but utils is compulsory
         utils.extend(DomQueryWrapper.prototype, utils, css, position, traverse, manipulation, events, data);
 
         // This is to emulate jQuery plugin, hopefully able to import some jQuery plugins this way
