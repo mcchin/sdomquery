@@ -75,23 +75,20 @@
 
     function Css() {
         this.addClass = function(className) {
-            var output = [],
-                i = 0;
+            var i = 0;
 
             if ( helper.stringNotBlank(className) ) {
                 for ( ; i < this.length ; i++ ) {
                     if ( !helper.matchString(this[i].className, className) ) {
                         this[i].className += " " + className;
-                        output.push(this[i]);
                     }
                 }
             }				
 
-            return new DomQuery(output);
+            return this;
         };
         this.removeClass = function(className) {
-            var output = [],
-                i = 0;
+            var i = 0;
 
 
             if ( helper.stringNotBlank(className) ) {
@@ -101,12 +98,11 @@
                                                    .replace(
                                                         new RegExp('(\\s|^)'+className+'(\\s|$)'), ""
                                                     );
-                        output.push(this[i]);
                     }
                 }
             }
 
-            return new DomQuery(output);
+            return this;
         };
         this.hasClass = function(className) {
             var i = 0;
@@ -125,7 +121,6 @@
         this.css = function() {
             var styles = {},
                 outputStyles = {},
-                output = [],
                 prop = null,
                 i = 0;
 
@@ -148,12 +143,11 @@
                 for ( prop in styles ) {
                     for ( i = 0 ; i < this.length ; i++ ) {
                         this[i].style[prop] = styles[prop];
-                        helper.pushUniq(output, this[i]);
                     }
                 }
             }
 
-            return new DomQuery(output);
+            return this;
         };
         this.styles = function() {
             if ( this.length > 0 ) {
