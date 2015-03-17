@@ -11,7 +11,8 @@
         position = require('./modules/position.js'),
         traverse = require('./modules/traverse.js'),
         manipulation = require('./modules/manipulation.js'),
-        events = require('./modules/events.js');
+        events = require('./modules/events.js'),
+        data = require('./modules/data.js');
     
     if ( !runOnce ) {
         // Attach uniq ID - This is to keep reference to bind / unbind events
@@ -20,7 +21,10 @@
 
         // Attach utils and other functions to the core
         utils.extend(wrapper, utils);
-        utils.extend(DomQueryWrapper.prototype, utils, css, position, traverse, manipulation, events);
+        utils.extend(DomQueryWrapper.prototype, utils, css, position, traverse, manipulation, events, data);
+
+        // This is to emulate jQuery plugin, hopefully able to import some jQuery plugins this way
+        wrapper.fn = DomQueryWrapper.prototype;
 
         runOnce = true;
     }

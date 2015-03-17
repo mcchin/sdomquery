@@ -67,10 +67,10 @@
                 do {
                     if ( !callback || 
                          (!callback && !eventName) || 
-                         (!callback && eventName === eventObj[i].eventName) || 
-                         (callback.guid === eventObj[i].guid && eventName === eventObj[i].eventName) ) {
+                         (!callback && eventName === eventObj[i].type) || 
+                         (callback.guid === eventObj[i].guid && eventName === eventObj[i].type) ) {
 
-                        ele.removeEventListener(eventObj[i].eventName, eventObj[i].handler, eventObj[i].capture);
+                        ele.removeEventListener(eventObj[i].type, eventObj[i].handler, eventObj[i].capture);
                         eventObj.splice(i,1);
                     } else {
                         i++;
@@ -114,8 +114,8 @@
                         }
 
                         that[i][DomQuery.uuid].push({
-                            guid: callback.guid,
-                            eventName: eventName,
+                            guid: callback.guid, // or data key for data cache
+                            type: eventName,	 // event name or "data" for data cache
                             handler: callbackStore,
                             args: args,
                             capture: false

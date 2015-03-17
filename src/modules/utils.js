@@ -6,7 +6,7 @@
     var helper = require('./helper.js');
 
     function Utils() {
-        this.each = function () {
+        this.each = function() {
             var elements = null,
                 callback = function() {};
 
@@ -28,13 +28,21 @@
             }
             return elements;
         };
-        this.extend = function (mergeTarget) {
+        this.extend = function(mergeTarget) {
             var otherObjects = [],
                   _key = null,
                   objProp = null;
 
-            for (_key = 1; _key < arguments.length; _key++) {
-                otherObjects[_key - 1] = arguments[_key];
+            if ( 1 === arguments.length ) {
+                // Merge to this.prototype
+                this.extend(
+                    this.fn,
+                    arguments[0]
+                );
+            } else {
+                for (_key = 1; _key < arguments.length; _key++) {
+                    otherObjects[_key - 1] = arguments[_key];
+                }				
             }
 
             for (_key = 0; _key < otherObjects.length; _key++) {

@@ -13,7 +13,8 @@
         position = require('./modules/position.js'),
         traverse = require('./modules/traverse.js'),
         manipulation = require('./modules/manipulation.js'),
-        events = require('./modules/events.js');
+        events = require('./modules/events.js'),
+        data = require('./modules/data.js');
     
     if ( !runOnce ) {
         // Attach uniq ID - This is to keep reference to bind / unbind events
@@ -22,7 +23,10 @@
 
         // Attach utils and other functions to the core
         utils.extend(wrapper, utils);
-        utils.extend(DomQueryWrapper.prototype, utils, css, position, traverse, manipulation, events);
+        utils.extend(DomQueryWrapper.prototype, utils, css, position, traverse, manipulation, events, data);
+
+        // This is to emulate jQuery plugin, hopefully able to import some jQuery plugins this way
+        wrapper.fn = DomQueryWrapper.prototype;
 
         runOnce = true;
     }
@@ -65,7 +69,7 @@
     glob.DomQuery = glob.$ = wrapper;
 })();
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./modules/css.js":2,"./modules/events.js":3,"./modules/manipulation.js":5,"./modules/position.js":6,"./modules/traverse.js":7,"./modules/utils.js":8}],2:[function(require,module,exports){
+},{"./modules/css.js":2,"./modules/data.js":3,"./modules/events.js":4,"./modules/manipulation.js":6,"./modules/position.js":7,"./modules/traverse.js":8,"./modules/utils.js":9}],2:[function(require,module,exports){
 (function () {
     "use strict";
 
@@ -160,7 +164,82 @@
 
     module.exports = new Css();
 }());
-},{"./helper.js":4}],3:[function(require,module,exports){
+},{"./helper.js":5}],3:[function(require,module,exports){
+(function () {
+    "use strict";
+
+    /* global window, global, self, navigator, DomQuery */
+
+    var helper = require('./helper.js');
+
+    function Data() {
+        this.data = function() {
+            var i = 0,
+                output = {},
+                item;
+
+            if ( this.length > 0 ) {
+                if ( 1 === arguments.length && this.isPlainObject(arguments[0]) ) {
+                    // Assign via object
+                    for ( ; i < this.length ; i++ ) {
+                        if ( "undefined" === typeof this[i][DomQuery.uuid]) {
+                            this[i][DomQuery.uuid] = [];
+                        }
+                        for ( item in arguments[0] ) {
+                            this[i][DomQuery.uuid].push({
+                                guid: item,
+                                type: 'data',
+                                handler: arguments[0][item],
+                                args: null, 	// For consistency
+                                capture: null	// For consistency
+                            });						
+                        }
+                    }
+                } else if ( 1 === arguments.length ) {
+                    // Return data from first object key
+                    if ( "undefined" === typeof this[0][DomQuery.uuid]) {
+                        this[0][DomQuery.uuid] = [];
+                    }
+
+                    for ( item in this[0][DomQuery.uuid] ) {
+                        if ( this[0][DomQuery.uuid][item].guid === arguments[0] ) {
+                            return this[0][DomQuery.uuid][item].handler;
+                        }
+                    }
+                    return;
+                } else if ( 2 === arguments.length ) {
+                    // Assign using key value
+                    for ( ; i < this.length ; i++ ) {
+                        if ( "undefined" === typeof this[i][DomQuery.uuid]) {
+                            this[i][DomQuery.uuid] = [];
+                        }
+                        this[i][DomQuery.uuid].push({
+                            guid: arguments[0],
+                            type: 'data',
+                            handler: arguments[1],
+                            args: null, 	// For consistency
+                            capture: null	// For consistency
+                        });
+                    }
+                } else {
+                    // Return first object all data keys
+                    for ( item in this[0][DomQuery.uuid] ) {
+                        if ( 'data' === this[0][DomQuery.uuid][item].type ) {
+                            output[this[0][DomQuery.uuid][item].guid] = this[0][DomQuery.uuid][item].handler;
+                        }
+                    }
+
+                    return output;
+                }
+            }
+
+            return this;
+        };
+    }
+
+    module.exports = new Data();
+}());
+},{"./helper.js":5}],4:[function(require,module,exports){
 (function () {
     "use strict";
 
@@ -350,7 +429,7 @@
 
     module.exports = new Events();
 }());
-},{"./helper.js":4}],4:[function(require,module,exports){
+},{"./helper.js":5}],5:[function(require,module,exports){
 (function () {
     "use strict";
 
@@ -420,10 +499,10 @@
                 do {
                     if ( !callback || 
                          (!callback && !eventName) || 
-                         (!callback && eventName === eventObj[i].eventName) || 
-                         (callback.guid === eventObj[i].guid && eventName === eventObj[i].eventName) ) {
+                         (!callback && eventName === eventObj[i].type) || 
+                         (callback.guid === eventObj[i].guid && eventName === eventObj[i].type) ) {
 
-                        ele.removeEventListener(eventObj[i].eventName, eventObj[i].handler, eventObj[i].capture);
+                        ele.removeEventListener(eventObj[i].type, eventObj[i].handler, eventObj[i].capture);
                         eventObj.splice(i,1);
                     } else {
                         i++;
@@ -467,8 +546,8 @@
                         }
 
                         that[i][DomQuery.uuid].push({
-                            guid: callback.guid,
-                            eventName: eventName,
+                            guid: callback.guid, // or data key for data cache
+                            type: eventName,	 // event name or "data" for data cache
                             handler: callbackStore,
                             args: args,
                             capture: false
@@ -512,7 +591,7 @@
 
     module.exports = new Helper();
 })();
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function () {
     "use strict";
 
@@ -586,7 +665,7 @@
 
     module.exports = new Manipulation();
 }());
-},{"./helper.js":4}],6:[function(require,module,exports){
+},{"./helper.js":5}],7:[function(require,module,exports){
 (function () {
     "use strict";
 
@@ -782,7 +861,7 @@
 
     module.exports = new Position();
 }());	
-},{"./helper.js":4}],7:[function(require,module,exports){
+},{"./helper.js":5}],8:[function(require,module,exports){
 (function () {
     "use strict";
 
@@ -950,7 +1029,7 @@
 
     module.exports = new Traverse();
 }());
-},{"./helper.js":4}],8:[function(require,module,exports){
+},{"./helper.js":5}],9:[function(require,module,exports){
 (function () {
     "use strict";
 
@@ -959,7 +1038,7 @@
     var helper = require('./helper.js');
 
     function Utils() {
-        this.each = function () {
+        this.each = function() {
             var elements = null,
                 callback = function() {};
 
@@ -981,13 +1060,21 @@
             }
             return elements;
         };
-        this.extend = function (mergeTarget) {
+        this.extend = function(mergeTarget) {
             var otherObjects = [],
                   _key = null,
                   objProp = null;
 
-            for (_key = 1; _key < arguments.length; _key++) {
-                otherObjects[_key - 1] = arguments[_key];
+            if ( 1 === arguments.length ) {
+                // Merge to this.prototype
+                this.extend(
+                    this.fn,
+                    arguments[0]
+                );
+            } else {
+                for (_key = 1; _key < arguments.length; _key++) {
+                    otherObjects[_key - 1] = arguments[_key];
+                }				
             }
 
             for (_key = 0; _key < otherObjects.length; _key++) {
@@ -1075,4 +1162,4 @@
 
     module.exports = new Utils();
 }());
-},{"./helper.js":4}]},{},[1]);
+},{"./helper.js":5}]},{},[1]);
